@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IFL Playoff Bracket Prototype</title>
+<title>IFL Playoff Bracket Prototype with SVG Connectors</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
 
   body {
     margin: 0;
-    background: #f0f4f8; /* Match previous pages */
+    background: #f0f4f8;
     font-family: 'Arial', sans-serif;
     color: #222;
     display: flex;
@@ -19,6 +19,7 @@
   .bracket-container {
     max-width: 480px;
     width: 100%;
+    position: relative;
   }
   .header {
     display: flex;
@@ -33,7 +34,7 @@
   .header h1 {
     font-family: 'Anton', sans-serif;
     font-size: 2.2rem;
-    color: #0c3d91; /* IFL Blue */
+    color: #0c3d91;
     margin: 0;
   }
 
@@ -41,10 +42,8 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 12px 24px;
-    position: relative;
   }
 
-  /* Round Labels */
   .round-label {
     grid-column: span 1;
     font-weight: 700;
@@ -54,7 +53,6 @@
     margin-bottom: 16px;
   }
 
-  /* Team box */
   .team {
     background: #ddd;
     color: white;
@@ -68,8 +66,6 @@
     z-index: 2;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
-
-  /* Colors for teams */
   .blue { background: #0c3d91; }
   .red { background: #d93025; }
   .green { background: #188038; }
@@ -79,7 +75,6 @@
   .brown { background: #5d4037; }
   .grey { background: #757575; }
 
-  /* Matchup group box */
   .matchup {
     border: 2px solid #0c3d91;
     border-radius: 12px;
@@ -90,7 +85,6 @@
     background: white;
     position: relative;
   }
-  /* Match label */
   .match-label {
     font-weight: 700;
     font-size: 0.9rem;
@@ -100,21 +94,14 @@
     user-select: none;
   }
 
-  /* Layout the matchups within bracket grid */
-  /* Quarterfinals on col 1 */
+  /* Grid placement for matchups */
   .quarter1 { grid-column: 1; grid-row: 1 / span 3; }
   .quarter2 { grid-column: 1; grid-row: 4 / span 3; }
   .quarter3 { grid-column: 1; grid-row: 7 / span 3; }
   .quarter4 { grid-column: 1; grid-row: 10 / span 3; }
-
-  /* Semifinals on col 3 */
   .semi1 { grid-column: 3; grid-row: 2 / span 4; }
   .semi2 { grid-column: 3; grid-row: 8 / span 4; }
-
-  /* Final on col 5 */
   .final { grid-column: 5; grid-row: 5 / span 4; }
-
-  /* Champion on col 7 */
   .champion {
     grid-column: 7;
     grid-row: 7;
@@ -129,129 +116,7 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
   }
 
-  /* Lines styling */
-  .line-horizontal {
-    height: 3px;
-    background: #0c3d91;
-    position: absolute;
-    z-index: 1;
-  }
-  .line-vertical {
-    width: 3px;
-    background: #0c3d91;
-    position: absolute;
-    z-index: 1;
-  }
-
-  /* Connectors for quarterfinal to semifinal */
-  .connector-q1-s1 {
-    grid-column: 2;
-    grid-row: 2 / 4;
-    position: relative;
-  }
-  .connector-q1-s1 .line-vertical {
-    height: 100%;
-    left: 12px;
-  }
-  .connector-q1-s1 .line-horizontal {
-    width: 20px;
-    top: 50%;
-    left: 0;
-  }
-
-  .connector-q2-s1 {
-    grid-column: 2;
-    grid-row: 5 / 7;
-    position: relative;
-  }
-  .connector-q2-s1 .line-vertical {
-    height: 100%;
-    left: 12px;
-  }
-  .connector-q2-s1 .line-horizontal {
-    width: 20px;
-    top: 50%;
-    left: 0;
-  }
-
-  .connector-q3-s2 {
-    grid-column: 2;
-    grid-row: 8 / 10;
-    position: relative;
-  }
-  .connector-q3-s2 .line-vertical {
-    height: 100%;
-    left: 12px;
-  }
-  .connector-q3-s2 .line-horizontal {
-    width: 20px;
-    top: 50%;
-    left: 0;
-  }
-
-  .connector-q4-s2 {
-    grid-column: 2;
-    grid-row: 11 / 13;
-    position: relative;
-  }
-  .connector-q4-s2 .line-vertical {
-    height: 100%;
-    left: 12px;
-  }
-  .connector-q4-s2 .line-horizontal {
-    width: 20px;
-    top: 50%;
-    left: 0;
-  }
-
-  /* Connectors for semifinal to final */
-  .connector-s1-f {
-    grid-column: 4;
-    grid-row: 4 / 8;
-    position: relative;
-  }
-  .connector-s1-f .line-vertical {
-    height: 100%;
-    left: 12px;
-  }
-  .connector-s1-f .line-horizontal {
-    width: 20px;
-    top: 50%;
-    left: 0;
-  }
-
-  .connector-s2-f {
-    grid-column: 4;
-    grid-row: 9 / 13;
-    position: relative;
-  }
-  .connector-s2-f .line-vertical {
-    height: 100%;
-    left: 12px;
-  }
-  .connector-s2-f .line-horizontal {
-    width: 20px;
-    top: 50%;
-    left: 0;
-  }
-
-  /* Connector final to champion */
-  .connector-f-c {
-    grid-column: 6;
-    grid-row: 7 / 9;
-    position: relative;
-  }
-  .connector-f-c .line-vertical {
-    height: 100%;
-    left: 12px;
-  }
-  .connector-f-c .line-horizontal {
-    width: 20px;
-    top: 50%;
-    left: 0;
-  }
-
-  /* Responsive tweaks */
+  /* Responsive */
   @media (max-width: 420px) {
     .bracket-container {
       max-width: 100%;
@@ -268,6 +133,17 @@
       font-size: 0.85rem;
     }
   }
+
+  /* SVG connectors container */
+  svg.connectors {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
 </style>
 </head>
 <body>
@@ -277,7 +153,7 @@
       <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752185315/WBIII_id02n2.png" alt="World Bowl Logo" />
     </header>
 
-    <section class="bracket" aria-describedby="bracket-description">
+    <section class="bracket" aria-describedby="bracket-description" id="bracket">
       <p id="bracket-description" hidden>Bracket showing quarterfinals, semifinals, final, and champion</p>
 
       <!-- Round labels -->
@@ -287,83 +163,127 @@
       <div class="round-label" style="grid-column:7; grid-row:1;">Champion</div>
 
       <!-- Quarterfinal matchups -->
-      <div class="matchup quarter1">
+      <div class="matchup quarter1" id="q1">
         <div class="match-label">Match 1</div>
         <div class="team blue">Blue Warriors</div>
         <div class="team red">Red Lions</div>
       </div>
-      <div class="matchup quarter2">
+      <div class="matchup quarter2" id="q2">
         <div class="match-label">Match 2</div>
         <div class="team green">Green Giants</div>
         <div class="team orange">Orange Eagles</div>
       </div>
-      <div class="matchup quarter3">
+      <div class="matchup quarter3" id="q3">
         <div class="match-label">Match 3</div>
         <div class="team purple">Purple Panthers</div>
         <div class="team cyan">Cyan Sharks</div>
       </div>
-      <div class="matchup quarter4">
+      <div class="matchup quarter4" id="q4">
         <div class="match-label">Match 4</div>
         <div class="team brown">Brown Bears</div>
         <div class="team grey">Grey Wolves</div>
       </div>
 
-      <!-- Connectors quarterfinal to semifinal -->
-      <div class="connector-q1-s1">
-        <div class="line-horizontal"></div>
-        <div class="line-vertical"></div>
-      </div>
-      <div class="connector-q2-s1">
-        <div class="line-horizontal"></div>
-        <div class="line-vertical"></div>
-      </div>
-      <div class="connector-q3-s2">
-        <div class="line-horizontal"></div>
-        <div class="line-vertical"></div>
-      </div>
-      <div class="connector-q4-s2">
-        <div class="line-horizontal"></div>
-        <div class="line-vertical"></div>
-      </div>
-
       <!-- Semifinal matchups -->
-      <div class="matchup semi1">
+      <div class="matchup semi1" id="s1">
         <div class="match-label">Match 5</div>
         <div class="team blue">Blue Warriors</div>
         <div class="team green">Green Giants</div>
       </div>
-      <div class="matchup semi2">
+      <div class="matchup semi2" id="s2">
         <div class="match-label">Match 6</div>
         <div class="team purple">Purple Panthers</div>
         <div class="team brown">Brown Bears</div>
       </div>
 
-      <!-- Connectors semifinal to final -->
-      <div class="connector-s1-f">
-        <div class="line-horizontal"></div>
-        <div class="line-vertical"></div>
-      </div>
-      <div class="connector-s2-f">
-        <div class="line-horizontal"></div>
-        <div class="line-vertical"></div>
-      </div>
-
       <!-- Final matchup -->
-      <div class="matchup final">
+      <div class="matchup final" id="f1">
         <div class="match-label">Match 7</div>
         <div class="team blue">Blue Warriors</div>
         <div class="team brown">Brown Bears</div>
       </div>
 
-      <!-- Connector final to champion -->
-      <div class="connector-f-c">
-        <div class="line-horizontal"></div>
-        <div class="line-vertical"></div>
-      </div>
-
       <!-- Champion -->
-      <div class="champion" aria-label="Champion">Blue Warriors</div>
+      <div class="champion" aria-label="Champion" id="champion">Blue Warriors</div>
+
+      <!-- SVG Connector -->
+      <svg class="connectors" aria-hidden="true" preserveAspectRatio="none">
+        <path id="line-q1-s1" stroke="#0c3d91" stroke-width="3" fill="none" />
+        <path id="line-q2-s1" stroke="#0c3d91" stroke-width="3" fill="none" />
+        <path id="line-q3-s2" stroke="#0c3d91" stroke-width="3" fill="none" />
+        <path id="line-q4-s2" stroke="#0c3d91" stroke-width="3" fill="none" />
+        <path id="line-s1-f" stroke="#0c3d91" stroke-width="3" fill="none" />
+        <path id="line-s2-f" stroke="#0c3d91" stroke-width="3" fill="none" />
+        <path id="line-f-c" stroke="#0c3d91" stroke-width="3" fill="none" />
+      </svg>
     </section>
   </main>
+
+  <script>
+    function getCenterPosition(el) {
+      const rect = el.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2 + window.scrollX,
+        y: rect.top + rect.height / 2 + window.scrollY
+      };
+    }
+
+    function setPath(pathEl, start, mid1, mid2, end) {
+      // Use a cubic Bezier curve to draw a smooth bracket style connector
+      pathEl.setAttribute('d',
+        `M${start.x},${start.y} 
+         C${mid1.x},${mid1.y} ${mid2.x},${mid2.y} ${end.x},${end.y}`
+      );
+    }
+
+    function updateConnector(idFrom, idTo, pathId) {
+      const from = document.getElementById(idFrom);
+      const to = document.getElementById(idTo);
+      const path = document.getElementById(pathId);
+
+      if (!from || !to || !path) return;
+
+      const fromRect = from.getBoundingClientRect();
+      const toRect = to.getBoundingClientRect();
+
+      // Calculate start point (right middle of from box)
+      const start = {
+        x: fromRect.right + window.scrollX,
+        y: fromRect.top + fromRect.height / 2 + window.scrollY
+      };
+
+      // Calculate end point (left middle of to box)
+      const end = {
+        x: toRect.left + window.scrollX,
+        y: toRect.top + toRect.height / 2 + window.scrollY
+      };
+
+      // Calculate control points for smooth curve
+      const offsetX = (end.x - start.x) / 2;
+
+      const mid1 = { x: start.x + offsetX, y: start.y };
+      const mid2 = { x: end.x - offsetX, y: end.y };
+
+      setPath(path, start, mid1, mid2, end);
+    }
+
+    function updateAllConnectors() {
+      updateConnector('q1', 's1', 'line-q1-s1');
+      updateConnector('q2', 's1', 'line-q2-s1');
+      updateConnector('q3', 's2', 'line-q3-s2');
+      updateConnector('q4', 's2', 'line-q4-s2');
+      updateConnector('s1', 'f1', 'line-s1-f');
+      updateConnector('s2', 'f1', 'line-s2-f');
+      updateConnector('f1', 'champion', 'line-f-c');
+    }
+
+    window.addEventListener('load', () => {
+      updateAllConnectors();
+    });
+    window.addEventListener('resize', () => {
+      updateAllConnectors();
+    });
+  </script>
 </body>
 </html>
+
