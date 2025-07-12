@@ -3,174 +3,150 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IFL Playoff Bracket Prototype</title>
+<title>Simple Bracket Test</title>
 <style>
   body {
-    margin: 0; 
+    background-color: #121212;
+    color: white;
     font-family: Arial, sans-serif;
-    background: #121212;
-    color: #eee;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
+    margin: 0; padding: 20px;
+    overflow-x: auto;
   }
   .bracket-container {
-    overflow-x: auto;
-    width: 100vw;
-  }
-  .bracket {
     display: flex;
-    gap: 120px;
-    align-items: flex-start;
-    min-width: 1000px;
-    padding-bottom: 40px;
+    gap: 60px;
+    align-items: center;
+    min-width: 900px;
   }
   .round {
     display: flex;
     flex-direction: column;
-    gap: 60px;
+    gap: 40px;
     min-width: 180px;
-    align-items: center;
   }
-  .round-title {
-    font-weight: bold;
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-    user-select: none;
+  .round h2 {
+    text-align: center;
+    margin-bottom: 10px;
   }
   .matchup {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    align-items: center;
-    width: 180px;
+    position: relative;
   }
   .match-label {
-    font-size: 1rem;
-    user-select: none;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 4px;
   }
   .teams {
     display: flex;
-    gap: 15px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
   }
   .team {
+    background: #222;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 8px 12px;
     width: 144px;
     height: 40px;
-    background: #222;
-    border-radius: 6px;
+    line-height: 24px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    cursor: pointer;
+    justify-content: center;
     user-select: none;
-    font-weight: 600;
-    color: white;
-    border: 2px solid transparent;
-    transition: border-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.2s, box-shadow 0.2s;
   }
   .team.selected {
-    border-color: #0a84ff;
-    transform: scale(1.05);
-    box-shadow: 0 0 10px #0a84ff;
-    z-index: 10;
+    background-color: #1e90ff;
+    box-shadow: 0 0 10px #1e90ff;
   }
   .team.disabled {
     opacity: 0.4;
     cursor: default;
   }
   .champion {
-    margin-top: 15px;
-    padding: 15px 25px;
-    background: #0a84ff;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1.3rem;
+    margin-top: 40px;
     text-align: center;
-    width: 180px;
-    user-select: none;
+    font-size: 18px;
+    font-weight: bold;
+    border: 2px solid #1e90ff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    min-width: 180px;
   }
 </style>
 </head>
 <body>
 
 <div class="bracket-container">
-  <div class="bracket">
-
-    <div class="round" id="divisional">
-      <div class="round-title">Divisional</div>
-      <!-- 4 Matchups -->
-      <div class="matchup" data-match="1">
-        <div class="match-label">Match 1</div>
-        <div class="teams">
-          <div class="team" data-round="divisional" data-match="1" data-team="1">Team 1</div>
-          <div class="team" data-round="divisional" data-match="1" data-team="2">Team 2</div>
-        </div>
-      </div>
-      <div class="matchup" data-match="2">
-        <div class="match-label">Match 2</div>
-        <div class="teams">
-          <div class="team" data-round="divisional" data-match="2" data-team="3">Team 3</div>
-          <div class="team" data-round="divisional" data-match="2" data-team="4">Team 4</div>
-        </div>
-      </div>
-      <div class="matchup" data-match="3">
-        <div class="match-label">Match 3</div>
-        <div class="teams">
-          <div class="team" data-round="divisional" data-match="3" data-team="5">Team 5</div>
-          <div class="team" data-round="divisional" data-match="3" data-team="6">Team 6</div>
-        </div>
-      </div>
-      <div class="matchup" data-match="4">
-        <div class="match-label">Match 4</div>
-        <div class="teams">
-          <div class="team" data-round="divisional" data-match="4" data-team="7">Team 7</div>
-          <div class="team" data-round="divisional" data-match="4" data-team="8">Team 8</div>
-        </div>
+  <div class="round" id="divisional">
+    <h2>Divisional</h2>
+    <div class="matchup" data-match="1">
+      <div class="match-label">Match 1</div>
+      <div class="teams">
+        <div class="team" data-round="divisional" data-match="1" data-team="1">Team 1</div>
+        <div class="team" data-round="divisional" data-match="1" data-team="2">Team 2</div>
       </div>
     </div>
-
-    <div class="round" id="conference">
-      <div class="round-title">Conference</div>
-      <!-- 2 Matchups -->
-      <div class="matchup" data-match="1">
-        <div class="match-label">Match 1</div>
-        <div class="teams">
-          <div class="team disabled" data-round="conference" data-match="1" data-team="">Select Winner</div>
-          <div class="team disabled" data-round="conference" data-match="1" data-team="">Select Winner</div>
-        </div>
-      </div>
-      <div class="matchup" data-match="2">
-        <div class="match-label">Match 2</div>
-        <div class="teams">
-          <div class="team disabled" data-round="conference" data-match="2" data-team="">Select Winner</div>
-          <div class="team disabled" data-round="conference" data-match="2" data-team="">Select Winner</div>
-        </div>
+    <div class="matchup" data-match="2">
+      <div class="match-label">Match 2</div>
+      <div class="teams">
+        <div class="team" data-round="divisional" data-match="2" data-team="3">Team 3</div>
+        <div class="team" data-round="divisional" data-match="2" data-team="4">Team 4</div>
       </div>
     </div>
-
-    <div class="round" id="championship">
-      <div class="round-title">Championship</div>
-      <!-- 1 Matchup -->
-      <div class="matchup" data-match="1">
-        <div class="match-label">Match 1</div>
-        <div class="teams">
-          <div class="team disabled" data-round="championship" data-match="1" data-team="">Select Winner</div>
-          <div class="team disabled" data-round="championship" data-match="1" data-team="">Select Winner</div>
-        </div>
+    <div class="matchup" data-match="3">
+      <div class="match-label">Match 3</div>
+      <div class="teams">
+        <div class="team" data-round="divisional" data-match="3" data-team="5">Team 5</div>
+        <div class="team" data-round="divisional" data-match="3" data-team="6">Team 6</div>
       </div>
     </div>
-
-    <div class="round" id="champion-round">
-      <div class="round-title">Champion</div>
-      <div class="champion" id="champion">No Champion Selected</div>
+    <div class="matchup" data-match="4">
+      <div class="match-label">Match 4</div>
+      <div class="teams">
+        <div class="team" data-round="divisional" data-match="4" data-team="7">Team 7</div>
+        <div class="team" data-round="divisional" data-match="4" data-team="8">Team 8</div>
+      </div>
     </div>
+  </div>
 
+  <div class="round" id="conference">
+    <h2>Conference</h2>
+    <div class="matchup" data-match="1">
+      <div class="match-label">Match 1</div>
+      <div class="teams">
+        <div class="team disabled" data-round="conference" data-match="1" data-team="">Select Winner</div>
+        <div class="team disabled" data-round="conference" data-match="1" data-team="">Select Winner</div>
+      </div>
+    </div>
+    <div class="matchup" data-match="2">
+      <div class="match-label">Match 2</div>
+      <div class="teams">
+        <div class="team disabled" data-round="conference" data-match="2" data-team="">Select Winner</div>
+        <div class="team disabled" data-round="conference" data-match="2" data-team="">Select Winner</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="round" id="championship">
+    <h2>Championship</h2>
+    <div class="matchup" data-match="1">
+      <div class="match-label">Match 1</div>
+      <div class="teams">
+        <div class="team disabled" data-round="championship" data-match="1" data-team="">Select Winner</div>
+        <div class="team disabled" data-round="championship" data-match="1" data-team="">Select Winner</div>
+      </div>
+    </div>
   </div>
 </div>
 
+<div class="champion" id="champion">No Champion Selected</div>
+
 <script>
-  <script>
+  // Data structure to hold selections
   const bracket = {
     divisional: {
       1: ['1', '2'],
@@ -188,6 +164,7 @@
     champion: ''
   };
 
+  // Update matchup display for a round & match
   function updateMatchup(round, match, teams) {
     const matchup = document.querySelector(`#${round} .matchup[data-match="${match}"] .teams`);
     if (!matchup) return;
@@ -196,30 +173,31 @@
       if (teams[i]) {
         teamDiv.textContent = `Team ${teams[i]}`;
         teamDiv.dataset.team = teams[i];
-        teamDiv.classList.remove('disabled');
+        teamDiv.classList.remove('disabled', 'selected');
       } else {
         teamDiv.textContent = 'Select Winner';
         teamDiv.dataset.team = '';
         teamDiv.classList.add('disabled');
+        teamDiv.classList.remove('selected');
       }
-      // Remove selection from updated teams
-      teamDiv.classList.remove('selected');
     }
   }
 
+  // Clear downstream selections from a given round and match
   function clearDownstream(round, match) {
     if (round === 'divisional') {
       const nextMatch = Math.ceil(match / 2);
       bracket.conference[nextMatch] = ['', ''];
       bracket.championship[1] = ['', ''];
       bracket.champion = '';
-      updateMatchup('conference', nextMatch, ['', '']);
-      updateMatchup('championship', 1, ['', '']);
+      updateMatchup('conference', 1, bracket.conference[1]);
+      updateMatchup('conference', 2, bracket.conference[2]);
+      updateMatchup('championship', 1, bracket.championship[1]);
       updateChampion('');
     } else if (round === 'conference') {
       bracket.championship[1] = ['', ''];
       bracket.champion = '';
-      updateMatchup('championship', 1, ['', '']);
+      updateMatchup('championship', 1, bracket.championship[1]);
       updateChampion('');
     } else if (round === 'championship') {
       bracket.champion = '';
@@ -227,6 +205,7 @@
     }
   }
 
+  // Update champion display
   function updateChampion(team) {
     const champDiv = document.getElementById('champion');
     bracket.champion = team;
@@ -237,6 +216,7 @@
     }
   }
 
+  // Handle team click event
   function handleTeamClick(e) {
     const el = e.currentTarget;
     if (el.classList.contains('disabled')) return;
@@ -247,6 +227,7 @@
     const isSelected = el.classList.contains('selected');
 
     if (isSelected) {
+      // Deselect and clear downstream
       el.classList.remove('selected');
       clearDownstream(round, match);
 
@@ -291,6 +272,7 @@
     }
   }
 
+  // Initialize event listeners and populate initial bracket
   function init() {
     for (let match = 1; match <= 4; match++) {
       updateMatchup('divisional', match, bracket.divisional[match]);
