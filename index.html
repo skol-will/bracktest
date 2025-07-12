@@ -1,334 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IFL Bracket Simple Flow</title>
-<style>
-  body {
-    background-color: #121212;
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    overflow-x: auto;
-  }
-  .bracket-container {
-    display: flex;
-    gap: 60px;
-    align-items: flex-start;
-    min-width: 900px;
-  }
-  .round {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    min-width: 180px;
-  }
-  .round h2 {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  .matchup {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .match-label {
-    text-align: center;
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
-  .teams {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .team {
-    background: #222;
-    border-radius: 5px;
-    cursor: pointer;
-    padding: 8px 12px;
-    width: 144px;
-    height: 40px;
-    line-height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-    transition: background-color 0.2s, box-shadow 0.2s;
-  }
-  .team.selected {
-    background-color: #1e90ff;
-    box-shadow: 0 0 10px #1e90ff;
-  }
-  .team.disabled {
-    opacity: 0.4;
-    cursor: default;
-  }
-  .champion {
-    margin-top: 40px;
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    border: 2px solid #1e90ff;
-    padding: 12px 20px;
-    border-radius: 8px;
-    min-width: 180px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFL Playoff Bracket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #121212;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .bracket-container {
+      display: flex;
+      gap: 4rem;
+      overflow-x: auto;
+      padding-bottom: 3rem;
+    }
+
+    .round {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .matchup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .team-card {
+      width: 144px;
+      height: 40px;
+      background-color: #2c2c2c;
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .team-card.selected {
+      border-color: #007bff;
+    }
+
+    .champion-section {
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .champion-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .champion-card {
+      width: 144px;
+      height: 40px;
+      background-color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #00aced;
+    }
+  </style>
 </head>
 <body>
+  <h1>IFL Playoff Bracket</h1>
 
-<div class="bracket-container">
-  <!-- Divisional Round -->
-  <div class="round" id="divisional">
-    <h2>Divisional</h2>
-    <div class="matchup" data-match="1">
-      <div class="match-label">Match 1</div>
-      <div class="teams">
-        <div class="team" data-round="divisional" data-match="1" data-team="1">Team 1</div>
-        <div class="team" data-round="divisional" data-match="1" data-team="2">Team 2</div>
+  <div class="bracket-container">
+    <div class="round" id="divisional-round">
+      <h2>Divisional</h2>
+      <div class="matchup" data-match="1">
+        <div class="team-card" onclick="selectWinner(this, 1)">Team 1</div>
+        <div class="team-card" onclick="selectWinner(this, 1)">Team 2</div>
+      </div>
+      <div class="matchup" data-match="2">
+        <div class="team-card" onclick="selectWinner(this, 2)">Team 3</div>
+        <div class="team-card" onclick="selectWinner(this, 2)">Team 4</div>
+      </div>
+      <div class="matchup" data-match="3">
+        <div class="team-card" onclick="selectWinner(this, 3)">Team 5</div>
+        <div class="team-card" onclick="selectWinner(this, 3)">Team 6</div>
+      </div>
+      <div class="matchup" data-match="4">
+        <div class="team-card" onclick="selectWinner(this, 4)">Team 7</div>
+        <div class="team-card" onclick="selectWinner(this, 4)">Team 8</div>
       </div>
     </div>
-    <div class="matchup" data-match="2">
-      <div class="match-label">Match 2</div>
-      <div class="teams">
-        <div class="team" data-round="divisional" data-match="2" data-team="3">Team 3</div>
-        <div class="team" data-round="divisional" data-match="2" data-team="4">Team 4</div>
-      </div>
+
+    <div class="round" id="conference-round">
+      <h2>Conference</h2>
     </div>
-    <div class="matchup" data-match="3">
-      <div class="match-label">Match 3</div>
-      <div class="teams">
-        <div class="team" data-round="divisional" data-match="3" data-team="5">Team 5</div>
-        <div class="team" data-round="divisional" data-match="3" data-team="6">Team 6</div>
-      </div>
-    </div>
-    <div class="matchup" data-match="4">
-      <div class="match-label">Match 4</div>
-      <div class="teams">
-        <div class="team" data-round="divisional" data-match="4" data-team="7">Team 7</div>
-        <div class="team" data-round="divisional" data-match="4" data-team="8">Team 8</div>
-      </div>
+
+    <div class="round" id="championship-round">
+      <h2>Championship</h2>
     </div>
   </div>
 
-  <!-- Conference Round -->
-  <div class="round" id="conference">
-    <h2>Conference</h2>
-    <div class="matchup" data-match="1">
-      <div class="match-label">Match 1</div>
-      <div class="teams">
-        <div class="team disabled" data-round="conference" data-match="1" data-team="">Waiting...</div>
-        <div class="team disabled" data-round="conference" data-match="1" data-team="">Waiting...</div>
-      </div>
-    </div>
-    <div class="matchup" data-match="2">
-      <div class="match-label">Match 2</div>
-      <div class="teams">
-        <div class="team disabled" data-round="conference" data-match="2" data-team="">Waiting...</div>
-        <div class="team disabled" data-round="conference" data-match="2" data-team="">Waiting...</div>
-      </div>
-    </div>
+  <div class="champion-section">
+    <div class="champion-title">🏆 Champion</div>
+    <div id="champion" class="champion-card">???</div>
   </div>
 
-  <!-- Championship Round -->
-  <div class="round" id="championship">
-    <h2>Championship</h2>
-    <div class="matchup" data-match="1">
-      <div class="match-label">Match 1</div>
-      <div class="teams">
-        <div class="team disabled" data-round="championship" data-match="1" data-team="">Waiting...</div>
-        <div class="team disabled" data-round="championship" data-match="1" data-team="">Waiting...</div>
-      </div>
-    </div>
-  </div>
-</div>
+  <script>
+    const winners = {
+      1: null,
+      2: null,
+      3: null,
+      4: null,
+      5: null,
+      6: null
+    };
 
-<div class="champion" id="champion">No Champion Selected</div>
+    function selectWinner(card, matchNum) {
+      const match = card.parentElement;
+      Array.from(match.children).forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      winners[matchNum] = card.textContent;
 
-<script>
-  // Store selected winners for each round
-  const winners = {
-    divisional: {},
-    conference: {},
-    championship: {},
-    champion: '',
-  };
-
-  // Utility: deselect all in a matchup
-  function deselectMatchup(round, match) {
-    const matchup = document.querySelectorAll(`#${round} .matchup[data-match="${match}"] .team`);
-    matchup.forEach(t => t.classList.remove('selected'));
-  }
-
-  // Utility: update teams in next round matchups
-  function updateNextRound(round) {
-    if (round === 'divisional') {
-      // Only if all divisional matches have winners
-      const divisionalMatches = document.querySelectorAll('#divisional .matchup');
-      if ([...divisionalMatches].some(m => !(winners.divisional[m.dataset.match]))) {
-        disableRound('conference');
-        clearRound('conference');
-        clearRound('championship');
-        clearChampion();
-        return;
+      // Check if Divisional is complete
+      if (matchNum <= 4 && winners[1] && winners[2] && winners[3] && winners[4]) {
+        populateNextRound('conference-round', [winners[1], winners[2], winners[3], winners[4]], [5, 6]);
       }
-      // Set conference teams from divisional winners
-      const conferenceMatches = document.querySelectorAll('#conference .matchup');
-      conferenceMatches.forEach((matchup, idx) => {
-        const matchNum = matchup.dataset.match;
-        // Each conference matchup gets two divisional winners:
-        // Conference match 1: divisional match 1 and 2 winners
-        // Conference match 2: divisional match 3 and 4 winners
-        const t1 = winners.divisional[(idx * 2) + 1];
-        const t2 = winners.divisional[(idx * 2) + 2];
-        const teams = [t1, t2];
-        const teamDivs = matchup.querySelectorAll('.team');
-        teams.forEach((team, i) => {
-          teamDivs[i].textContent = `Team ${team}`;
-          teamDivs[i].dataset.team = team;
-          teamDivs[i].classList.remove('disabled', 'selected');
-        });
-      });
-      enableRound('conference');
-      clearRound('championship');
-      clearChampion();
 
-    } else if (round === 'conference') {
-      // Only if all conference matches have winners
-      const conferenceMatches = document.querySelectorAll('#conference .matchup');
-      if ([...conferenceMatches].some(m => !(winners.conference[m.dataset.match]))) {
-        disableRound('championship');
-        clearRound('championship');
-        clearChampion();
-        return;
-      }
-      // Set championship teams from conference winners
-      const championshipMatchup = document.querySelector('#championship .matchup');
-      const teams = [winners.conference['1'], winners.conference['2']];
-      const teamDivs = championshipMatchup.querySelectorAll('.team');
-      teams.forEach((team, i) => {
-        teamDivs[i].textContent = `Team ${team}`;
-        teamDivs[i].dataset.team = team;
-        teamDivs[i].classList.remove('disabled', 'selected');
-      });
-      enableRound('championship');
-      clearChampion();
-
-    } else if (round === 'championship') {
-      if (!winners.championship['1']) {
-        clearChampion();
-        return;
-      }
-      setChampion(winners.championship['1']);
-    }
-  }
-
-  function enableRound(round) {
-    const teams = document.querySelectorAll(`#${round} .team`);
-    teams.forEach(t => t.classList.remove('disabled', 'selected'));
-  }
-  function disableRound(round) {
-    const teams = document.querySelectorAll(`#${round} .team`);
-    teams.forEach(t => {
-      t.classList.add('disabled');
-      t.classList.remove('selected');
-      t.textContent = 'Waiting...';
-      t.dataset.team = '';
-    });
-  }
-  function clearRound(round) {
-    const teams = document.querySelectorAll(`#${round} .team`);
-    teams.forEach(t => {
-      t.textContent = 'Waiting...';
-      t.dataset.team = '';
-      t.classList.add('disabled');
-      t.classList.remove('selected');
-    });
-    // Clear winners record for that round
-    winners[round] = {};
-  }
-  function clearChampion() {
-    winners.champion = '';
-    document.getElementById('champion').textContent = 'No Champion Selected';
-  }
-  function setChampion(team) {
-    winners.champion = team;
-    document.getElementById('champion').textContent = `Champion: Team ${team}`;
-  }
-
-  function handleTeamClick(e) {
-    const el = e.currentTarget;
-    if (el.classList.contains('disabled')) return;
-
-    const round = el.dataset.round;
-    const match = el.parentElement.parentElement.dataset.match;
-    const team = el.dataset.team;
-
-    const alreadySelected = el.classList.contains('selected');
-
-    if (alreadySelected) {
-      // Deselecting
-      el.classList.remove('selected');
-      delete winners[round][match];
-      // Clear all rounds after this one
-      if (round === 'divisional') {
-        clearRound('conference');
-        clearRound('championship');
-        clearChampion();
-        disableRound('conference');
-        disableRound('championship');
-      } else if (round === 'conference') {
-        clearRound('championship');
-        clearChampion();
-        disableRound('championship');
-      } else if (round === 'championship') {
-        clearChampion();
-      }
-    } else {
-      // Selecting - only one per matchup
-      // Deselect siblings
-      const siblings = el.parentElement.querySelectorAll('.team');
-      siblings.forEach(sib => sib.classList.remove('selected'));
-      el.classList.add('selected');
-      winners[round][match] = team;
-
-      // After all matches selected, update next round
-      if (round === 'divisional') {
-        const divisionalMatches = document.querySelectorAll('#divisional .matchup');
-        if ([...divisionalMatches].every(m => winners.divisional[m.dataset.match])) {
-          updateNextRound('divisional');
+      // Check if Conference is complete
+      if (matchNum === 5 || matchNum === 6) {
+        if (winners[5] && winners[6]) {
+          populateNextRound('championship-round', [winners[5], winners[6]], [7]);
         }
-      } else if (round === 'conference') {
-        const conferenceMatches = document.querySelectorAll('#conference .matchup');
-        if ([...conferenceMatches].every(m => winners.conference[m.dataset.match])) {
-          updateNextRound('conference');
-        }
-      } else if (round === 'championship') {
-        const championshipMatch = document.querySelector('#championship .matchup');
-        if (winners.championship['1']) {
-          updateNextRound('championship');
-        }
+      }
+
+      // Check if Final is complete
+      if (matchNum === 7) {
+        document.getElementById('champion').textContent = winners[7];
       }
     }
-  }
 
-  function init() {
-    // Divisional is enabled at start
-    enableRound('divisional');
-    disableRound('conference');
-    disableRound('championship');
-    clearChampion();
+    function populateNextRound(roundId, teams, matchNums) {
+      const round = document.getElementById(roundId);
+      round.innerHTML = `<h2>${round.querySelector('h2').textContent}</h2>`; // Clear but keep title
 
-    // Add event listeners
-    document.querySelectorAll('.team').forEach(team => {
-      team.addEventListener('click', handleTeamClick);
-    });
-  }
+      for (let i = 0; i < teams.length; i += 2) {
+        const matchId = matchNums[Math.floor(i / 2)];
+        const matchup = document.createElement('div');
+        matchup.classList.add('matchup');
+        matchup.setAttribute('data-match', matchId);
 
-  window.onload = init;
-</script>
+        const team1 = document.createElement('div');
+        team1.className = 'team-card';
+        team1.textContent = teams[i];
+        team1.onclick = () => selectWinner(team1, matchId);
 
+        const team2 = document.createElement('div');
+        team2.className = 'team-card';
+        team2.textContent = teams[i + 1];
+        team2.onclick = () => selectWinner(team2, matchId);
+
+        matchup.appendChild(team1);
+        matchup.appendChild(team2);
+        round.appendChild(matchup);
+      }
+    }
+  </script>
 </body>
 </html>
+
