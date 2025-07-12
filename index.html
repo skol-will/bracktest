@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IFL Bracket Prototype</title>
+<title>IFL Bracket Simple Flow</title>
 <style>
   body {
     background-color: #121212;
@@ -80,6 +80,7 @@
 <body>
 
 <div class="bracket-container">
+  <!-- Divisional Round -->
   <div class="round" id="divisional">
     <h2>Divisional</h2>
     <div class="matchup" data-match="1">
@@ -112,31 +113,33 @@
     </div>
   </div>
 
+  <!-- Conference Round -->
   <div class="round" id="conference">
     <h2>Conference</h2>
     <div class="matchup" data-match="1">
       <div class="match-label">Match 1</div>
       <div class="teams">
-        <div class="team disabled" data-round="conference" data-match="1" data-team="">Select Winner</div>
-        <div class="team disabled" data-round="conference" data-match="1" data-team="">Select Winner</div>
+        <div class="team disabled" data-round="conference" data-match="1" data-team="">Waiting...</div>
+        <div class="team disabled" data-round="conference" data-match="1" data-team="">Waiting...</div>
       </div>
     </div>
     <div class="matchup" data-match="2">
       <div class="match-label">Match 2</div>
       <div class="teams">
-        <div class="team disabled" data-round="conference" data-match="2" data-team="">Select Winner</div>
-        <div class="team disabled" data-round="conference" data-match="2" data-team="">Select Winner</div>
+        <div class="team disabled" data-round="conference" data-match="2" data-team="">Waiting...</div>
+        <div class="team disabled" data-round="conference" data-match="2" data-team="">Waiting...</div>
       </div>
     </div>
   </div>
 
+  <!-- Championship Round -->
   <div class="round" id="championship">
     <h2>Championship</h2>
     <div class="matchup" data-match="1">
       <div class="match-label">Match 1</div>
       <div class="teams">
-        <div class="team disabled" data-round="championship" data-match="1" data-team="">Select Winner</div>
-        <div class="team disabled" data-round="championship" data-match="1" data-team="">Select Winner</div>
+        <div class="team disabled" data-round="championship" data-match="1" data-team="">Waiting...</div>
+        <div class="team disabled" data-round="championship" data-match="1" data-team="">Waiting...</div>
       </div>
     </div>
   </div>
@@ -145,71 +148,114 @@
 <div class="champion" id="champion">No Champion Selected</div>
 
 <script>
-  // Bracket data structure
-  const bracket = {
-    divisional: {
-      1: ['1', '2'],
-      2: ['3', '4'],
-      3: ['5', '6'],
-      4: ['7', '8'],
-    },
-    conference: {
-      1: ['', ''],
-      2: ['', ''],
-    },
-    championship: {
-      1: ['', ''],
-    },
+  // Store selected winners for each round
+  const winners = {
+    divisional: {},
+    conference: {},
+    championship: {},
     champion: '',
   };
 
-  function updateMatchup(round, match, teams) {
-    const matchup = document.querySelector(`#${round} .matchup[data-match="${match}"] .teams`);
-    if (!matchup) return;
-    for (let i = 0; i < 2; i++) {
-      const teamDiv = matchup.children[i];
-      if (teams[i]) {
-        teamDiv.textContent = `Team ${teams[i]}`;
-        teamDiv.dataset.team = teams[i];
-        teamDiv.classList.remove('disabled', 'selected');
-      } else {
-        teamDiv.textContent = 'Select Winner';
-        teamDiv.dataset.team = '';
-        teamDiv.classList.add('disabled');
-        teamDiv.classList.remove('selected');
-      }
-    }
+  // Utility: deselect all in a matchup
+  function deselectMatchup(round, match) {
+    const matchup = document.querySelectorAll(`#${round} .matchup[data-match="${match}"] .team`);
+    matchup.forEach(t => t.classList.remove('selected'));
   }
 
-  function clearDownstream(round, match) {
+  // Utility: update teams in next round matchups
+  function updateNextRound(round) {
     if (round === 'divisional') {
-      const nextMatch = Math.ceil(match / 2);
-      bracket.conference[nextMatch] = ['', ''];
-      bracket.championship[1] = ['', ''];
-      bracket.champion = '';
-      updateMatchup('conference', 1, bracket.conference[1]);
-      updateMatchup('conference', 2, bracket.conference[2]);
-      updateMatchup('championship', 1, bracket.championship[1]);
-      updateChampion('');
+      // Only if all divisional matches have winners
+      const divisionalMatches = document.querySelectorAll('#divisional .matchup');
+      if ([...divisionalMatches].some(m => !(winners.divisional[m.dataset.match]))) {
+        disableRound('conference');
+        clearRound('conference');
+        clearRound('championship');
+        clearChampion();
+        return;
+      }
+      // Set conference teams from divisional winners
+      const conferenceMatches = document.querySelectorAll('#conference .matchup');
+      conferenceMatches.forEach((matchup, idx) => {
+        const matchNum = matchup.dataset.match;
+        // Each conference matchup gets two divisional winners:
+        // Conference match 1: divisional match 1 and 2 winners
+        // Conference match 2: divisional match 3 and 4 winners
+        const t1 = winners.divisional[(idx * 2) + 1];
+        const t2 = winners.divisional[(idx * 2) + 2];
+        const teams = [t1, t2];
+        const teamDivs = matchup.querySelectorAll('.team');
+        teams.forEach((team, i) => {
+          teamDivs[i].textContent = `Team ${team}`;
+          teamDivs[i].dataset.team = team;
+          teamDivs[i].classList.remove('disabled', 'selected');
+        });
+      });
+      enableRound('conference');
+      clearRound('championship');
+      clearChampion();
+
     } else if (round === 'conference') {
-      bracket.championship[1] = ['', ''];
-      bracket.champion = '';
-      updateMatchup('championship', 1, bracket.championship[1]);
-      updateChampion('');
+      // Only if all conference matches have winners
+      const conferenceMatches = document.querySelectorAll('#conference .matchup');
+      if ([...conferenceMatches].some(m => !(winners.conference[m.dataset.match]))) {
+        disableRound('championship');
+        clearRound('championship');
+        clearChampion();
+        return;
+      }
+      // Set championship teams from conference winners
+      const championshipMatchup = document.querySelector('#championship .matchup');
+      const teams = [winners.conference['1'], winners.conference['2']];
+      const teamDivs = championshipMatchup.querySelectorAll('.team');
+      teams.forEach((team, i) => {
+        teamDivs[i].textContent = `Team ${team}`;
+        teamDivs[i].dataset.team = team;
+        teamDivs[i].classList.remove('disabled', 'selected');
+      });
+      enableRound('championship');
+      clearChampion();
+
     } else if (round === 'championship') {
-      bracket.champion = '';
-      updateChampion('');
+      if (!winners.championship['1']) {
+        clearChampion();
+        return;
+      }
+      setChampion(winners.championship['1']);
     }
   }
 
-  function updateChampion(team) {
-    const champDiv = document.getElementById('champion');
-    bracket.champion = team;
-    if (team) {
-      champDiv.textContent = `Champion: Team ${team}`;
-    } else {
-      champDiv.textContent = 'No Champion Selected';
-    }
+  function enableRound(round) {
+    const teams = document.querySelectorAll(`#${round} .team`);
+    teams.forEach(t => t.classList.remove('disabled', 'selected'));
+  }
+  function disableRound(round) {
+    const teams = document.querySelectorAll(`#${round} .team`);
+    teams.forEach(t => {
+      t.classList.add('disabled');
+      t.classList.remove('selected');
+      t.textContent = 'Waiting...';
+      t.dataset.team = '';
+    });
+  }
+  function clearRound(round) {
+    const teams = document.querySelectorAll(`#${round} .team`);
+    teams.forEach(t => {
+      t.textContent = 'Waiting...';
+      t.dataset.team = '';
+      t.classList.add('disabled');
+      t.classList.remove('selected');
+    });
+    // Clear winners record for that round
+    winners[round] = {};
+  }
+  function clearChampion() {
+    winners.champion = '';
+    document.getElementById('champion').textContent = 'No Champion Selected';
+  }
+  function setChampion(team) {
+    winners.champion = team;
+    document.getElementById('champion').textContent = `Champion: Team ${team}`;
   }
 
   function handleTeamClick(e) {
@@ -217,69 +263,67 @@
     if (el.classList.contains('disabled')) return;
 
     const round = el.dataset.round;
-    const match = Number(el.dataset.match);
+    const match = el.parentElement.parentElement.dataset.match;
     const team = el.dataset.team;
-    const isSelected = el.classList.contains('selected');
 
-    if (isSelected) {
-      // Deselect and clear downstream
+    const alreadySelected = el.classList.contains('selected');
+
+    if (alreadySelected) {
+      // Deselecting
       el.classList.remove('selected');
-      clearDownstream(round, match);
-
+      delete winners[round][match];
+      // Clear all rounds after this one
       if (round === 'divisional') {
-        const nextMatch = Math.ceil(match / 2);
-        if (bracket.conference[nextMatch].includes(team)) {
-          bracket.conference[nextMatch] = bracket.conference[nextMatch].map(t => (t === team ? '' : t));
-          updateMatchup('conference', nextMatch, bracket.conference[nextMatch]);
-          clearDownstream('conference', nextMatch);
-        }
+        clearRound('conference');
+        clearRound('championship');
+        clearChampion();
+        disableRound('conference');
+        disableRound('championship');
       } else if (round === 'conference') {
-        if (bracket.championship[1].includes(team)) {
-          bracket.championship[1] = bracket.championship[1].map(t => (t === team ? '' : t));
-          updateMatchup('championship', 1, bracket.championship[1]);
-          clearDownstream('championship', 1);
-        }
+        clearRound('championship');
+        clearChampion();
+        disableRound('championship');
       } else if (round === 'championship') {
-        if (bracket.champion === team) {
-          updateChampion('');
-        }
+        clearChampion();
       }
     } else {
-      // Select team, deselect siblings
+      // Selecting - only one per matchup
+      // Deselect siblings
       const siblings = el.parentElement.querySelectorAll('.team');
       siblings.forEach(sib => sib.classList.remove('selected'));
       el.classList.add('selected');
+      winners[round][match] = team;
 
+      // After all matches selected, update next round
       if (round === 'divisional') {
-        const nextMatch = Math.ceil(match / 2);
-        const slot = (match % 2) === 1 ? 0 : 1;
-        bracket.conference[nextMatch][slot] = team;
-        updateMatchup('conference', nextMatch, bracket.conference[nextMatch]);
-        clearDownstream('divisional', match);
+        const divisionalMatches = document.querySelectorAll('#divisional .matchup');
+        if ([...divisionalMatches].every(m => winners.divisional[m.dataset.match])) {
+          updateNextRound('divisional');
+        }
       } else if (round === 'conference') {
-        const slot = (match === 1) ? 0 : 1;
-        bracket.championship[1][slot] = team;
-        updateMatchup('championship', 1, bracket.championship[1]);
-        clearDownstream('conference', match);
+        const conferenceMatches = document.querySelectorAll('#conference .matchup');
+        if ([...conferenceMatches].every(m => winners.conference[m.dataset.match])) {
+          updateNextRound('conference');
+        }
       } else if (round === 'championship') {
-        updateChampion(team);
+        const championshipMatch = document.querySelector('#championship .matchup');
+        if (winners.championship['1']) {
+          updateNextRound('championship');
+        }
       }
     }
   }
 
   function init() {
-    // Initialize Divisional
-    for (let match = 1; match <= 4; match++) {
-      updateMatchup('divisional', match, bracket.divisional[match]);
-    }
-    updateMatchup('conference', 1, bracket.conference[1]);
-    updateMatchup('conference', 2, bracket.conference[2]);
-    updateMatchup('championship', 1, bracket.championship[1]);
-    updateChampion(bracket.champion);
+    // Divisional is enabled at start
+    enableRound('divisional');
+    disableRound('conference');
+    disableRound('championship');
+    clearChampion();
 
-    // Add event listeners to all teams
-    document.querySelectorAll('.team').forEach(teamDiv => {
-      teamDiv.addEventListener('click', handleTeamClick);
+    // Add event listeners
+    document.querySelectorAll('.team').forEach(team => {
+      team.addEventListener('click', handleTeamClick);
     });
   }
 
