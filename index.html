@@ -9,7 +9,7 @@
 
   body {
     margin: 0;
-    background: #0c3d91; /* Dark blue background */
+    background: #050a1e; /* Much darker navy/black */
     font-family: 'Arial', sans-serif;
     color: #fff;
     display: flex;
@@ -48,17 +48,17 @@
     grid-column: span 1;
     font-weight: 700;
     font-size: 1rem;
-    color: #a8c1f0;
+    color: #7ea1e8;
     text-align: center;
     margin-bottom: 16px;
     user-select: none;
   }
 
   .matchup {
-    border: 2px solid #4a7be0;
+    border: 2px solid #3d5ad6;
     border-radius: 12px;
     padding: 12px 8px 8px;
-    background: #142e75; /* Slightly lighter blue */
+    background: #0c1c56; /* Darker but still distinct */
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -68,7 +68,7 @@
   .match-label {
     font-weight: 700;
     font-size: 0.9rem;
-    color: #c3d1f5;
+    color: #a5b8ff;
     text-align: center;
     margin-bottom: 6px;
     user-select: none;
@@ -83,7 +83,7 @@
     cursor: default;
     box-shadow: 0 3px 6px rgba(0,0,0,0.5);
     margin: 0 auto;
-    background: #0c3d91;
+    background: #050a1e;
   }
   .team-card img {
     width: 100%;
@@ -95,7 +95,7 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     color: white;
     font-weight: 700;
     font-size: 0.85rem;
@@ -104,18 +104,21 @@
     padding: 3px 0;
   }
 
+  /* Champion card bigger */
   .champion {
     grid-column: 7;
     grid-row: 7;
-    background: #4a7be0;
-    color: white;
-    font-size: 1.4rem;
-    font-weight: 900;
-    text-align: center;
-    border-radius: 12px;
-    padding: 14px 10px;
-    user-select: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0 auto;
+  }
+  .champion .team-card {
+    width: 180px;
+    height: 60px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.9);
+    border: 3px solid #3d5ad6;
   }
 
   /* Grid placement for matchups */
@@ -136,6 +139,10 @@
     .team-card {
       width: 120px;
       height: 36px;
+    }
+    .champion .team-card {
+      width: 160px;
+      height: 52px;
     }
     .header h1 {
       font-size: 1.8rem;
@@ -258,18 +265,21 @@
 
       <!-- Champion -->
       <div class="champion" aria-label="Champion" id="champion">
-        Australia Whites
+        <div class="team-card" title="Australia Whites">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182184/australia-whites_h9o2vz.png" alt="Australia Whites Logo" />
+          <div class="team-name-overlay">Australia Whites</div>
+        </div>
       </div>
 
       <!-- SVG Connector -->
       <svg class="connectors" aria-hidden="true" preserveAspectRatio="none">
-        <path id="line-q1-s1" stroke="#4a7be0" stroke-width="3" fill="none" />
-        <path id="line-q2-s1" stroke="#4a7be0" stroke-width="3" fill="none" />
-        <path id="line-q3-s2" stroke="#4a7be0" stroke-width="3" fill="none" />
-        <path id="line-q4-s2" stroke="#4a7be0" stroke-width="3" fill="none" />
-        <path id="line-s1-f" stroke="#4a7be0" stroke-width="3" fill="none" />
-        <path id="line-s2-f" stroke="#4a7be0" stroke-width="3" fill="none" />
-        <path id="line-f-c" stroke="#4a7be0" stroke-width="3" fill="none" />
+        <path id="line-q1-s1" stroke="#3d5ad6" stroke-width="3" fill="none" />
+        <path id="line-q2-s1" stroke="#3d5ad6" stroke-width="3" fill="none" />
+        <path id="line-q3-s2" stroke="#3d5ad6" stroke-width="3" fill="none" />
+        <path id="line-q4-s2" stroke="#3d5ad6" stroke-width="3" fill="none" />
+        <path id="line-s1-f" stroke="#3d5ad6" stroke-width="3" fill="none" />
+        <path id="line-s2-f" stroke="#3d5ad6" stroke-width="3" fill="none" />
+        <path id="line-f-c" stroke="#3d5ad6" stroke-width="3" fill="none" />
       </svg>
     </section>
   </main>
