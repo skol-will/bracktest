@@ -17,39 +17,39 @@
   }
   .bracket {
     display: flex;
-    gap: 50px;
-    max-width: 1100px;
+    gap: 80px;
+    max-width: 1400px;
     align-items: center;
   }
   .round {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 50px;
     flex: 1;
-    min-width: 160px;
+    min-width: 180px;
   }
   .round-title {
     text-align: center;
     font-weight: 700;
-    font-size: 1.3rem;
-    margin-bottom: 16px;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
     color: #5fb1e6;
   }
   .matchup {
     background: #1e2233;
     border-radius: 10px;
-    padding: 12px 8px;
+    padding: 14px 10px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    box-shadow: 0 0 8px #2e3655;
+    gap: 16px;
+    box-shadow: 0 0 10px #2e3655;
     position: relative;
   }
   .match-label {
     position: absolute;
-    top: -20px;
-    left: 12px;
-    font-size: 0.85rem;
+    top: -24px;
+    left: 14px;
+    font-size: 0.9rem;
     color: #7aa8d6;
     font-weight: 600;
     user-select: none;
@@ -59,60 +59,48 @@
     border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 8px 12px;
+    gap: 14px;
+    padding: 10px 14px;
     cursor: pointer;
     user-select: none;
     transition: background-color 0.25s, box-shadow 0.25s;
     position: relative;
+    min-height: 60px;
   }
   .team-card img {
-    width: 50px;
-    height: 50px;
-    border-radius: 6px;
-    object-fit: contain;
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover; /* Changed from contain to cover to fill container */
     background: #000;
   }
   .team-name {
     flex-grow: 1;
     color: #eee;
     font-weight: 700;
-    text-shadow: 1px 1px 4px #0009;
-    font-size: 1.1rem;
+    text-shadow: 1.2px 1.2px 5px #000a;
+    font-size: 1.15rem;
+    white-space: nowrap;
   }
   .team-card.selected {
     background-color: #3178c6;
-    box-shadow: 0 0 12px #4f98d6;
+    box-shadow: 0 0 14px #4f98d6;
+    z-index: 10;
   }
   .team-card.disabled {
     opacity: 0.25;
     pointer-events: none;
   }
-  /* Connectors */
-  .connector {
-    position: absolute;
-    background-color: #5fb1e6;
-  }
-  /* Vertical line */
-  .connector.vline {
-    width: 3px;
-    background-color: #5fb1e6;
-  }
-  /* Horizontal line */
-  .connector.hline {
-    height: 3px;
-    background-color: #5fb1e6;
-  }
 
+  /* Connectors */
   /* Quarterfinal to semifinal connectors */
-  /* Each matchup vertical center lines */
   .round.quarterfinals .matchup:nth-child(odd)::after,
   .round.quarterfinals .matchup:nth-child(even)::after {
     content: "";
     position: absolute;
     top: 50%;
-    right: -50px;
-    width: 40px;
+    right: -65px;
+    width: 55px;
     height: 3px;
     background-color: #5fb1e6;
     transform: translateY(-50%);
@@ -122,8 +110,8 @@
     content: "";
     position: absolute;
     top: 50%;
-    right: -50px;
-    height: 30px;
+    right: -65px;
+    height: 40px;
     width: 3px;
     background-color: #5fb1e6;
     border-radius: 2px;
@@ -133,8 +121,8 @@
     content: "";
     position: absolute;
     top: 50%;
-    right: -50px;
-    height: 30px;
+    right: -65px;
+    height: 40px;
     width: 3px;
     background-color: #5fb1e6;
     border-radius: 2px;
@@ -147,8 +135,8 @@
     content: "";
     position: absolute;
     top: 50%;
-    right: -50px;
-    width: 40px;
+    right: -65px;
+    width: 55px;
     height: 3px;
     background-color: #5fb1e6;
     transform: translateY(-50%);
@@ -158,8 +146,8 @@
     content: "";
     position: absolute;
     top: 50%;
-    right: -50px;
-    height: 20px;
+    right: -65px;
+    height: 30px;
     width: 3px;
     background-color: #5fb1e6;
     border-radius: 2px;
@@ -169,8 +157,8 @@
     content: "";
     position: absolute;
     top: 50%;
-    right: -50px;
-    height: 20px;
+    right: -65px;
+    height: 30px;
     width: 3px;
     background-color: #5fb1e6;
     border-radius: 2px;
@@ -182,8 +170,8 @@
     content: "";
     position: absolute;
     top: 50%;
-    right: -50px;
-    width: 40px;
+    right: -65px;
+    width: 55px;
     height: 3px;
     background-color: #5fb1e6;
     transform: translateY(-50%);
@@ -193,8 +181,8 @@
     content: "";
     position: absolute;
     top: 50%;
-    right: -50px;
-    height: 50px;
+    right: -65px;
+    height: 60px;
     width: 3px;
     background-color: #5fb1e6;
     border-radius: 2px;
@@ -204,8 +192,8 @@
     content: "";
     position: absolute;
     top: 50%;
-    right: -50px;
-    height: 50px;
+    right: -65px;
+    height: 60px;
     width: 3px;
     background-color: #5fb1e6;
     border-radius: 2px;
@@ -229,15 +217,15 @@
     color: #fff;
     font-weight: 800;
     font-size: 1.5rem;
-    box-shadow: 0 0 28px #4f98d6;
-    min-width: 220px;
+    box-shadow: 0 0 30px #4f98d6;
+    min-width: 240px;
     user-select: none;
   }
   .champion-card img {
-    width: 70px;
-    height: 70px;
-    object-fit: contain;
-    border-radius: 8px;
+    width: 80px;
+    height: 80px;
+    object-fit: cover; /* Fill the container */
+    border-radius: 10px;
     background: #000;
   }
   .champion-card .team-name {
@@ -246,20 +234,23 @@
   /* Responsive tweaks */
   @media (max-width: 900px) {
     .bracket {
-      gap: 30px;
+      gap: 40px;
       max-width: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 10px;
     }
     .round {
       min-width: 140px;
-      gap: 20px;
+      gap: 30px;
     }
     .team-card img {
-      width: 42px;
-      height: 42px;
+      width: 48px;
+      height: 48px;
     }
     .champion-card {
       font-size: 1.3rem;
-      min-width: 180px;
+      min-width: 200px;
     }
   }
 </style>
