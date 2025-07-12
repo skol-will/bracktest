@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Simple Bracket Test</title>
+<title>IFL Bracket Prototype</title>
 <style>
   body {
     background-color: #121212;
     color: white;
     font-family: Arial, sans-serif;
-    margin: 0; padding: 20px;
+    margin: 20px;
     overflow-x: auto;
   }
   .bracket-container {
     display: flex;
     gap: 60px;
-    align-items: center;
+    align-items: flex-start;
     min-width: 900px;
   }
   .round {
@@ -32,7 +32,6 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    position: relative;
   }
   .match-label {
     text-align: center;
@@ -69,7 +68,7 @@
   .champion {
     margin-top: 40px;
     text-align: center;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     border: 2px solid #1e90ff;
     padding: 12px 20px;
@@ -146,25 +145,24 @@
 <div class="champion" id="champion">No Champion Selected</div>
 
 <script>
-  // Data structure to hold selections
+  // Bracket data structure
   const bracket = {
     divisional: {
       1: ['1', '2'],
       2: ['3', '4'],
       3: ['5', '6'],
-      4: ['7', '8']
+      4: ['7', '8'],
     },
     conference: {
       1: ['', ''],
-      2: ['', '']
+      2: ['', ''],
     },
     championship: {
-      1: ['', '']
+      1: ['', ''],
     },
-    champion: ''
+    champion: '',
   };
 
-  // Update matchup display for a round & match
   function updateMatchup(round, match, teams) {
     const matchup = document.querySelector(`#${round} .matchup[data-match="${match}"] .teams`);
     if (!matchup) return;
@@ -183,7 +181,6 @@
     }
   }
 
-  // Clear downstream selections from a given round and match
   function clearDownstream(round, match) {
     if (round === 'divisional') {
       const nextMatch = Math.ceil(match / 2);
@@ -205,7 +202,6 @@
     }
   }
 
-  // Update champion display
   function updateChampion(team) {
     const champDiv = document.getElementById('champion');
     bracket.champion = team;
@@ -216,7 +212,6 @@
     }
   }
 
-  // Handle team click event
   function handleTeamClick(e) {
     const el = e.currentTarget;
     if (el.classList.contains('disabled')) return;
@@ -272,8 +267,8 @@
     }
   }
 
-  // Initialize event listeners and populate initial bracket
   function init() {
+    // Initialize Divisional
     for (let match = 1; match <= 4; match++) {
       updateMatchup('divisional', match, bracket.divisional[match]);
     }
@@ -282,6 +277,7 @@
     updateMatchup('championship', 1, bracket.championship[1]);
     updateChampion(bracket.champion);
 
+    // Add event listeners to all teams
     document.querySelectorAll('.team').forEach(teamDiv => {
       teamDiv.addEventListener('click', handleTeamClick);
     });
