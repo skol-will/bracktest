@@ -3,497 +3,259 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IFL Playoff Bracket - Horizontal</title>
+<title>Simple Bracket Mechanics</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
   body {
-    margin: 0; padding: 20px;
-    background: #111319;
-    font-family: 'Roboto Condensed', sans-serif;
+    font-family: Arial, sans-serif;
+    background: #222;
     color: #eee;
     display: flex;
     justify-content: center;
-    min-height: 100vh;
+    padding: 20px;
   }
   .bracket {
     display: flex;
-    gap: 80px;
-    max-width: 1400px;
-    align-items: center;
+    gap: 60px;
   }
   .round {
     display: flex;
     flex-direction: column;
-    gap: 50px;
-    flex: 1;
-    min-width: 180px;
+    gap: 40px;
+    min-width: 160px;
+    align-items: center;
   }
   .round-title {
-    text-align: center;
-    font-weight: 700;
-    font-size: 1.4rem;
+    font-weight: bold;
     margin-bottom: 20px;
-    color: #5fb1e6;
+    text-align: center;
   }
   .matchup {
-    background: #1e2233;
-    border-radius: 10px;
-    padding: 14px 10px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    box-shadow: 0 0 10px #2e3655;
-    position: relative;
-  }
-  .match-label {
-    position: absolute;
-    top: -24px;
-    left: 14px;
-    font-size: 0.9rem;
-    color: #7aa8d6;
-    font-weight: 600;
-    user-select: none;
-  }
-  .team-card {
-    background: #232a42;
-    border-radius: 8px;
-    display: flex;
+    gap: 10px;
     align-items: center;
-    gap: 14px;
-    padding: 10px 14px;
+  }
+  .team {
+    width: 144px;
+    height: 40px;
+    border-radius: 6px;
+    background-size: cover;
+    background-position: center;
     cursor: pointer;
     user-select: none;
-    transition: background-color 0.25s, box-shadow 0.25s;
-    position: relative;
-    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(0,0,0,0.8);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    border: 2px solid transparent;
   }
-  .team-card img {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    object-fit: cover; /* Changed from contain to cover to fill container */
-    background: #000;
-  }
-  .team-name {
-    flex-grow: 1;
-    color: #eee;
-    font-weight: 700;
-    text-shadow: 1.2px 1.2px 5px #000a;
-    font-size: 1.15rem;
-    white-space: nowrap;
-  }
-  .team-card.selected {
-    background-color: #3178c6;
-    box-shadow: 0 0 14px #4f98d6;
+  .team.selected {
+    border-color: #0a84ff;
+    box-shadow: 0 0 8px #0a84ff;
+    transform: scale(1.05);
     z-index: 10;
   }
-  .team-card.disabled {
-    opacity: 0.25;
-    pointer-events: none;
+  .team.disabled {
+    opacity: 0.5;
+    cursor: default;
   }
-
-  /* Connectors */
-  /* Quarterfinal to semifinal connectors */
-  .round.quarterfinals .matchup:nth-child(odd)::after,
-  .round.quarterfinals .matchup:nth-child(even)::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -65px;
-    width: 55px;
-    height: 3px;
-    background-color: #5fb1e6;
-    transform: translateY(-50%);
-    border-radius: 2px;
-  }
-  .round.quarterfinals .matchup:nth-child(odd)::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -65px;
-    height: 40px;
-    width: 3px;
-    background-color: #5fb1e6;
-    border-radius: 2px;
-    transform: translateY(-100%);
-  }
-  .round.quarterfinals .matchup:nth-child(even)::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -65px;
-    height: 40px;
-    width: 3px;
-    background-color: #5fb1e6;
-    border-radius: 2px;
-    transform: translateY(0%);
-  }
-
-  /* Semifinal connectors */
-  .round.semis .matchup:nth-child(odd)::after,
-  .round.semis .matchup:nth-child(even)::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -65px;
-    width: 55px;
-    height: 3px;
-    background-color: #5fb1e6;
-    transform: translateY(-50%);
-    border-radius: 2px;
-  }
-  .round.semis .matchup:nth-child(odd)::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -65px;
-    height: 30px;
-    width: 3px;
-    background-color: #5fb1e6;
-    border-radius: 2px;
-    transform: translateY(-100%);
-  }
-  .round.semis .matchup:nth-child(even)::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -65px;
-    height: 30px;
-    width: 3px;
-    background-color: #5fb1e6;
-    border-radius: 2px;
-    transform: translateY(0%);
-  }
-
-  /* Final connectors */
-  .round.final .matchup::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -65px;
-    width: 55px;
-    height: 3px;
-    background-color: #5fb1e6;
-    transform: translateY(-50%);
-    border-radius: 2px;
-  }
-  .round.final .matchup:nth-child(odd)::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -65px;
-    height: 60px;
-    width: 3px;
-    background-color: #5fb1e6;
-    border-radius: 2px;
-    transform: translateY(-100%);
-  }
-  .round.final .matchup:nth-child(even)::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -65px;
-    height: 60px;
-    width: 3px;
-    background-color: #5fb1e6;
-    border-radius: 2px;
-    transform: translateY(0%);
-  }
-
-  /* Champion round */
-  .round.champion {
-    flex: 0.9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .champion-card {
-    background: #3178c6;
-    border-radius: 12px;
-    padding: 16px 28px;
+  .champion {
+    margin-top: 20px;
+    padding: 15px;
+    background: #0a84ff;
+    border-radius: 8px;
+    min-width: 160px;
+    height: 50px;
     display: flex;
     align-items: center;
-    gap: 18px;
-    color: #fff;
-    font-weight: 800;
-    font-size: 1.5rem;
-    box-shadow: 0 0 30px #4f98d6;
-    min-width: 240px;
-    user-select: none;
-  }
-  .champion-card img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover; /* Fill the container */
-    border-radius: 10px;
-    background: #000;
-  }
-  .champion-card .team-name {
-    white-space: nowrap;
-  }
-  /* Responsive tweaks */
-  @media (max-width: 900px) {
-    .bracket {
-      gap: 40px;
-      max-width: 100%;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding-bottom: 10px;
-    }
-    .round {
-      min-width: 140px;
-      gap: 30px;
-    }
-    .team-card img {
-      width: 48px;
-      height: 48px;
-    }
-    .champion-card {
-      font-size: 1.3rem;
-      min-width: 200px;
-    }
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.3rem;
+    text-shadow: 0 0 5px rgba(0,0,0,0.7);
   }
 </style>
 </head>
 <body>
 
-<div class="bracket" id="bracket">
-  <!-- Quarterfinals -->
-  <div class="round quarterfinals">
+<div class="bracket">
+
+  <div class="round" id="quarterfinals">
     <div class="round-title">Quarterfinals</div>
     <div class="matchup" data-match="1">
-      <div class="match-label">Match 1</div>
-      <div class="team-card" data-round="quarter" data-match="1" data-team="Australia Whites" tabindex="0">
-        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182184/australia-whites_h9o2vz.png" alt="Australia Whites" />
-        <div class="team-name">Australia Whites</div>
-      </div>
-      <div class="team-card" data-round="quarter" data-match="1" data-team="Italia Bulls" tabindex="0">
-        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/italia-bulls_aocvis.png" alt="Italia Bulls" />
-        <div class="team-name">Italia Bulls</div>
-      </div>
+      <div class="team" data-round="quarter" data-match="1" data-team="A" style="background-color: #1f77b4;">Team A</div>
+      <div class="team" data-round="quarter" data-match="1" data-team="B" style="background-color: #ff7f0e;">Team B</div>
     </div>
     <div class="matchup" data-match="2">
-      <div class="match-label">Match 2</div>
-      <div class="team-card" data-round="quarter" data-match="2" data-team="Belarus Barbarians" tabindex="0">
-        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/belarus-barbarians_ydx3kz.png" alt="Belarus Barbarians" />
-        <div class="team-name">Belarus Barbarians</div>
-      </div>
-      <div class="team-card" data-round="quarter" data-match="2" data-team="Singapore Smelters" tabindex="0">
-        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/singapore-smelters_qn3ges.png" alt="Singapore Smelters" />
-        <div class="team-name">Singapore Smelters</div>
-      </div>
+      <div class="team" data-round="quarter" data-match="2" data-team="C" style="background-color: #2ca02c;">Team C</div>
+      <div class="team" data-round="quarter" data-match="2" data-team="D" style="background-color: #d62728;">Team D</div>
     </div>
     <div class="matchup" data-match="3">
-      <div class="match-label">Match 3</div>
-      <div class="team-card" data-round="quarter" data-match="3" data-team="South Korea Deers" tabindex="0">
-        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/southkorea-deers_jbt02f.png" alt="South Korea Deers" />
-        <div class="team-name">South Korea Deers</div>
-      </div>
-      <div class="team-card" data-round="quarter" data-match="3" data-team="Poland Panthers" tabindex="0">
-        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/poland-panthers_ppg3zr.png" alt="Poland Panthers" />
-        <div class="team-name">Poland Panthers</div>
-      </div>
+      <div class="team" data-round="quarter" data-match="3" data-team="E" style="background-color: #9467bd;">Team E</div>
+      <div class="team" data-round="quarter" data-match="3" data-team="F" style="background-color: #8c564b;">Team F</div>
     </div>
     <div class="matchup" data-match="4">
-      <div class="match-label">Match 4</div>
-      <div class="team-card" data-round="quarter" data-match="4" data-team="Germany Cavaliers" tabindex="0">
-        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/germany-cavaliers_qrcojc.png" alt="Germany Cavaliers" />
-        <div class="team-name">Germany Cavaliers</div>
-      </div>
-      <div class="team-card" data-round="quarter" data-match="4" data-team="UK 3 Lions" tabindex="0">
-        <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/uk-tri-lions_kyixfr.png" alt="UK 3 Lions" />
-        <div class="team-name">UK 3 Lions</div>
-      </div>
+      <div class="team" data-round="quarter" data-match="4" data-team="G" style="background-color: #e377c2;">Team G</div>
+      <div class="team" data-round="quarter" data-match="4" data-team="H" style="background-color: #7f7f7f;">Team H</div>
     </div>
   </div>
 
-  <!-- Semifinals -->
-  <div class="round semis">
+  <div class="round" id="semifinals">
     <div class="round-title">Semifinals</div>
     <div class="matchup" data-match="1">
-      <div class="match-label">Match 1</div>
-      <div class="team-card disabled" data-round="semi" data-match="1" data-team="" tabindex="-1" aria-disabled="true">
-        <img src="" alt="" />
-        <div class="team-name">&nbsp;</div>
-      </div>
-      <div class="team-card disabled" data-round="semi" data-match="1" data-team="" tabindex="-1" aria-disabled="true">
-        <img src="" alt="" />
-        <div class="team-name">&nbsp;</div>
-      </div>
+      <div class="team disabled" data-round="semi" data-match="1" data-team="">Select Winner</div>
+      <div class="team disabled" data-round="semi" data-match="1" data-team="">Select Winner</div>
     </div>
     <div class="matchup" data-match="2">
-      <div class="match-label">Match 2</div>
-      <div class="team-card disabled" data-round="semi" data-match="2" data-team="" tabindex="-1" aria-disabled="true">
-        <img src="" alt="" />
-        <div class="team-name">&nbsp;</div>
-      </div>
-      <div class="team-card disabled" data-round="semi" data-match="2" data-team="" tabindex="-1" aria-disabled="true">
-        <img src="" alt="" />
-        <div class="team-name">&nbsp;</div>
-      </div>
+      <div class="team disabled" data-round="semi" data-match="2" data-team="">Select Winner</div>
+      <div class="team disabled" data-round="semi" data-match="2" data-team="">Select Winner</div>
     </div>
   </div>
 
-  <!-- Final -->
-  <div class="round final">
+  <div class="round" id="final">
     <div class="round-title">Final</div>
     <div class="matchup" data-match="1">
-      <div class="match-label">Match 1</div>
-      <div class="team-card disabled" data-round="final" data-match="1" data-team="" tabindex="-1" aria-disabled="true">
-        <img src="" alt="" />
-        <div class="team-name">&nbsp;</div>
-      </div>
-      <div class="team-card disabled" data-round="final" data-match="1" data-team="" tabindex="-1" aria-disabled="true">
-        <img src="" alt="" />
-        <div class="team-name">&nbsp;</div>
-      </div>
+      <div class="team disabled" data-round="final" data-match="1" data-team="">Select Winner</div>
+      <div class="team disabled" data-round="final" data-match="1" data-team="">Select Winner</div>
     </div>
   </div>
 
-  <!-- Champion -->
-  <div class="round champion">
-    <div class="round-title">World Bowl Champion</div>
-    <div class="champion-card" aria-live="polite" aria-atomic="true">
-      <img src="" alt="Champion Team Logo" />
-      <div class="team-name" id="champion-name">&nbsp;</div>
-    </div>
+  <div class="round" id="champion-round">
+    <div class="round-title">Champion</div>
+    <div class="champion" id="champion">No Champion Yet</div>
   </div>
+
 </div>
 
 <script>
-  const bracket = document.getElementById('bracket');
-  const selectedWinners = {
-    quarter: {},
-    semi: {},
-    final: {},
-    champion: null
+  const bracketData = {
+    quarterfinals: {
+      1: ['A', 'B'],
+      2: ['C', 'D'],
+      3: ['E', 'F'],
+      4: ['G', 'H']
+    },
+    semifinals: {
+      1: ['', ''],
+      2: ['', '']
+    },
+    final: {
+      1: ['', '']
+    },
+    champion: ''
   };
 
-  function getTeamCards(round, match) {
-    return bracket.querySelectorAll(`.team-card[data-round="${round}"][data-match="${match}"]`);
+  function getTeamElement(round, match, team) {
+    return document.querySelector(`.team[data-round="${round}"][data-match="${match}"][data-team="${team}"]`);
   }
 
-  function updateNextRound(round, match, teamName, teamLogo) {
-    let nextRound = '';
-    let nextMatch = 0;
-    let pos = 0;
-
-    if (round === 'quarter') {
-      nextRound = 'semi';
-      nextMatch = Math.ceil(match / 2);
-      pos = (match % 2 === 1) ? 0 : 1;
-    } else if (round === 'semi') {
-      nextRound = 'final';
-      nextMatch = 1;
-      pos = (match === 1) ? 0 : 1;
-    } else if (round === 'final') {
-      nextRound = 'champion';
-    }
-
-    if (nextRound === 'champion') {
-      const champCard = bracket.querySelector('.champion-card');
-      champCard.querySelector('img').src = teamLogo;
-      champCard.querySelector('img').alt = teamName + ' Logo';
-      champCard.querySelector('.team-name').textContent = teamName;
-      selectedWinners.champion = teamName;
-      return;
-    }
-
-    const nextTeams = getTeamCards(nextRound, nextMatch);
-    if (nextTeams.length) {
-      const targetTeam = nextTeams[pos];
-      targetTeam.dataset.team = teamName;
-      targetTeam.querySelector('img').src = teamLogo;
-      targetTeam.querySelector('img').alt = teamName + ' Logo';
-      targetTeam.querySelector('.team-name').textContent = teamName;
-      targetTeam.classList.remove('disabled');
-      targetTeam.classList.remove('selected');
-      targetTeam.setAttribute('tabindex', '0');
-    }
+  function getMatchup(round, match) {
+    return document.querySelector(`.round#${round} .matchup[data-match="${match}"]`);
   }
 
-  function clearNextRoundSelection(round, match) {
-    let nextRound = '';
-    let nextMatch = 0;
-    let pos = 0;
-
-    if (round === 'quarter') {
-      nextRound = 'semi';
-      nextMatch = Math.ceil(match / 2);
-      pos = (match % 2 === 1) ? 0 : 1;
-    } else if (round === 'semi') {
-      nextRound = 'final';
-      nextMatch = 1;
-      pos = (match === 1) ? 0 : 1;
-    } else if (round === 'final') {
-      nextRound = 'champion';
-    } else {
-      return;
-    }
-
-    if (nextRound === 'champion') {
-      const champCard = bracket.querySelector('.champion-card');
-      champCard.querySelector('img').src = '';
-      champCard.querySelector('img').alt = '';
-      champCard.querySelector('.team-name').textContent = '';
-      selectedWinners.champion = null;
-      return;
-    }
-
-    const nextTeams = getTeamCards(nextRound, nextMatch);
-    if (nextTeams.length) {
-      const targetTeam = nextTeams[pos];
-      targetTeam.dataset.team = '';
-      targetTeam.querySelector('img').src = '';
-      targetTeam.querySelector('img').alt = '';
-      targetTeam.querySelector('.team-name').textContent = '\u00A0'; // non-breaking space
-      targetTeam.classList.add('disabled');
-      targetTeam.classList.remove('selected');
-      targetTeam.setAttribute('tabindex', '-1');
-
-      // Recursively clear downstream
-      clearNextRoundSelection(nextRound, nextMatch);
-    }
-  }
-
-  function onTeamCardClick(event) {
-    const card = event.currentTarget;
-    if (card.classList.contains('disabled')) return;
-
-    const round = card.dataset.round;
-    const match = parseInt(card.dataset.match);
-    const team = card.dataset.team;
-
-    // Deselect if already selected
-    if (card.classList.contains('selected')) {
-      card.classList.remove('selected');
-      selectedWinners[round][match] = null;
-      clearNextRoundSelection(round, match);
-    } else {
-      // Select this card and deselect sibling card
-      const siblings = getTeamCards(round, match);
-      siblings.forEach(sib => {
-        sib.classList.remove('selected');
-      });
-      card.classList.add('selected');
-      selectedWinners[round][match] = team;
-
-      // Update next round accordingly
-      const logo = card.querySelector('img').src;
-      updateNextRound(round, match, team, logo);
-    }
-  }
-
-  // Attach event listeners
-  function attachListeners() {
-    const allTeamCards = bracket.querySelectorAll('.team-card:not(.disabled)');
-    allTeamCards.forEach(card => {
-      card.removeEventListener('click', onTeamCardClick);
-      card.addEventListener('click', onTeamCardClick);
+  function updateMatchup(round, match, teams) {
+    const matchup = getMatchup(round, match);
+    if (!matchup) return;
+    const teamDivs = matchup.querySelectorAll('.team');
+    teams.forEach((teamName, idx) => {
+      const teamDiv = teamDivs[idx];
+      if (teamName) {
+        teamDiv.textContent = "Team " + teamName;
+        teamDiv.dataset.team = teamName;
+        teamDiv.classList.remove('disabled');
+      } else {
+        teamDiv.textContent = 'Select Winner';
+        teamDiv.dataset.team = '';
+        teamDiv.classList.add('disabled');
+      }
+      teamDiv.classList.remove('selected');
     });
   }
 
-  attachListeners();
+  function clearDownstream(round, match) {
+    if (round === 'quarterfinals') {
+      // clear semifinal and down
+      updateMatchup('semifinals', Math.ceil(match/2), ['', '']);
+      updateMatchup('final', 1, ['', '']);
+      setChampion('');
+    } else if (round === 'semifinals') {
+      // clear final and champion
+      updateMatchup('final', 1, ['', '']);
+      setChampion('');
+    } else if (round === 'final') {
+      // clear champion
+      setChampion('');
+    }
+  }
+
+  function setChampion(teamName) {
+    const champDiv = document.getElementById('champion');
+    bracketData.champion = teamName;
+    if (teamName) {
+      champDiv.textContent = "Champion: Team " + teamName;
+    } else {
+      champDiv.textContent = "No Champion Yet";
+    }
+  }
+
+  function handleTeamClick(e) {
+    const el = e.currentTarget;
+    if (el.classList.contains('disabled')) return;
+
+    const round = el.dataset.round;
+    const match = parseInt(el.dataset.match);
+    const team = el.dataset.team;
+
+    const selected = el.classList.contains('selected');
+
+    if (selected) {
+      // deselect and clear downstream
+      el.classList.remove('selected');
+      clearDownstream(round, match);
+    } else {
+      // select this team and update next round
+      // deselect other in same matchup
+      const siblings = el.parentElement.querySelectorAll('.team');
+      siblings.forEach(sib => sib.classList.remove('selected'));
+      el.classList.add('selected');
+
+      if (round === 'quarterfinals') {
+        // advance to semifinals
+        const semiMatch = Math.ceil(match / 2);
+        const semiTeams = bracketData.semifinals[semiMatch];
+        const teamIdx = (match % 2 === 1) ? 0 : 1;
+        semiTeams[teamIdx] = team;
+        bracketData.semifinals[semiMatch] = semiTeams;
+        updateMatchup('semifinals', semiMatch, semiTeams);
+        clearDownstream('quarterfinals', match);
+      } else if (round === 'semifinals') {
+        // advance to final
+        const finalTeams = bracketData.final[1];
+        const finalMatch = 1;
+        const semiMatch = match;
+        const teamIdx = (semiMatch === 1) ? 0 : 1;
+        finalTeams[teamIdx] = team;
+        bracketData.final[finalMatch] = finalTeams;
+        updateMatchup('final', finalMatch, finalTeams);
+        clearDownstream('semifinals', match);
+      } else if (round === 'final') {
+        // set champion
+        setChampion(team);
+        clearDownstream('final', match);
+      }
+    }
+  }
+
+  function setup() {
+    const teams = document.querySelectorAll('.team');
+    teams.forEach(team => {
+      team.addEventListener('click', handleTeamClick);
+    });
+  }
+
+  setup();
 </script>
 
 </body>
