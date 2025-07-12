@@ -3,175 +3,188 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IFL Playoff Bracket</title>
+  <title>IFL Playoff Predictor Bracket</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Orbitron', sans-serif;
       background-color: #121212;
       color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      padding: 20px;
+      overflow-x: auto;
     }
 
     .bracket-container {
       display: flex;
-      gap: 4rem;
-      overflow-x: auto;
-      padding-bottom: 3rem;
+      flex-direction: row;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: nowrap;
+      min-width: 1200px;
     }
 
-    .round {
+    .bracket-column {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .round-title {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #00bcd4;
     }
 
     .matchup {
       display: flex;
       flex-direction: column;
+      gap: 8px;
       align-items: center;
-      gap: 0.5rem;
     }
 
     .team-card {
       width: 144px;
       height: 40px;
-      background-color: #2c2c2c;
-      border: 2px solid transparent;
+      background-color: #333;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       cursor: pointer;
-      position: relative;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
     }
 
     .team-card.selected {
-      border-color: #007bff;
+      border-color: #00bcd4;
+      background-color: #005f73;
     }
 
-    .champion-section {
-      margin-top: 3rem;
+    .champion-container {
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .champion-box {
       text-align: center;
     }
 
-    .champion-title {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .champion-card {
-      width: 144px;
-      height: 40px;
-      background-color: #1a1a1a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #00aced;
+    .champion-box .team-card {
+      margin-top: 10px;
+      border-color: gold;
+      background-color: #444;
     }
   </style>
 </head>
 <body>
-  <h1>IFL Playoff Bracket</h1>
 
-  <div class="bracket-container">
-    <div class="round" id="divisional-round">
-      <h2>Divisional</h2>
-      <div class="matchup" data-match="1">
-        <div class="team-card" onclick="selectWinner(this, 1)">Team 1</div>
-        <div class="team-card" onclick="selectWinner(this, 1)">Team 2</div>
-      </div>
-      <div class="matchup" data-match="2">
-        <div class="team-card" onclick="selectWinner(this, 2)">Team 3</div>
-        <div class="team-card" onclick="selectWinner(this, 2)">Team 4</div>
-      </div>
-      <div class="matchup" data-match="3">
-        <div class="team-card" onclick="selectWinner(this, 3)">Team 5</div>
-        <div class="team-card" onclick="selectWinner(this, 3)">Team 6</div>
-      </div>
-      <div class="matchup" data-match="4">
-        <div class="team-card" onclick="selectWinner(this, 4)">Team 7</div>
-        <div class="team-card" onclick="selectWinner(this, 4)">Team 8</div>
-      </div>
+<h1 style="text-align:center;">IFL Playoff Bracket</h1>
+<div class="bracket-container">
+  <div class="bracket-column" id="divisional">
+    <div class="round-title">Divisional</div>
+    <div class="matchup">
+      <div class="team-card" onclick="selectWinner(this, 0, 'conference')">Team 1</div>
+      <div class="team-card" onclick="selectWinner(this, 0, 'conference')">Team 2</div>
     </div>
-
-    <div class="round" id="conference-round">
-      <h2>Conference</h2>
+    <div class="matchup">
+      <div class="team-card" onclick="selectWinner(this, 1, 'conference')">Team 3</div>
+      <div class="team-card" onclick="selectWinner(this, 1, 'conference')">Team 4</div>
     </div>
-
-    <div class="round" id="championship-round">
-      <h2>Championship</h2>
+    <div class="matchup">
+      <div class="team-card" onclick="selectWinner(this, 2, 'conference')">Team 5</div>
+      <div class="team-card" onclick="selectWinner(this, 2, 'conference')">Team 6</div>
+    </div>
+    <div class="matchup">
+      <div class="team-card" onclick="selectWinner(this, 3, 'conference')">Team 7</div>
+      <div class="team-card" onclick="selectWinner(this, 3, 'conference')">Team 8</div>
     </div>
   </div>
 
-  <div class="champion-section">
-    <div class="champion-title">🏆 Champion</div>
-    <div id="champion" class="champion-card">???</div>
+  <div class="bracket-column" id="conference">
+    <div class="round-title">Conference</div>
   </div>
 
-  <script>
-    const winners = {
-      1: null,
-      2: null,
-      3: null,
-      4: null,
-      5: null,
-      6: null
-    };
+  <div class="bracket-column" id="championship">
+    <div class="round-title">Championship</div>
+  </div>
+</div>
 
-    function selectWinner(card, matchNum) {
-      const match = card.parentElement;
-      Array.from(match.children).forEach(c => c.classList.remove('selected'));
+<div class="champion-container">
+  <div class="champion-box" id="champion">
+    <div class="round-title">Champion</div>
+  </div>
+</div>
+
+<script>
+  const bracketStages = ['conference', 'championship', 'champion'];
+  const selections = {
+    conference: [],
+    championship: [],
+    champion: []
+  };
+
+  function selectWinner(card, index, nextStage) {
+    const matchup = card.parentElement;
+    const allCards = matchup.querySelectorAll('.team-card');
+    const stage = matchup.parentElement.id;
+
+    // Deselect others
+    allCards.forEach(c => c.classList.remove('selected'));
+
+    // Toggle selection
+    if (!card.classList.contains('selected')) {
       card.classList.add('selected');
-      winners[matchNum] = card.textContent;
-
-      // Check if Divisional is complete
-      if (matchNum <= 4 && winners[1] && winners[2] && winners[3] && winners[4]) {
-        populateNextRound('conference-round', [winners[1], winners[2], winners[3], winners[4]], [5, 6]);
-      }
-
-      // Check if Conference is complete
-      if (matchNum === 5 || matchNum === 6) {
-        if (winners[5] && winners[6]) {
-          populateNextRound('championship-round', [winners[5], winners[6]], [7]);
-        }
-      }
-
-      // Check if Final is complete
-      if (matchNum === 7) {
-        document.getElementById('champion').textContent = winners[7];
-      }
+    } else {
+      card.classList.remove('selected');
     }
 
-    function populateNextRound(roundId, teams, matchNums) {
-      const round = document.getElementById(roundId);
-      round.innerHTML = `<h2>${round.querySelector('h2').textContent}</h2>`; // Clear but keep title
+    // Update selections array
+    const selected = Array.from(document.querySelectorAll(`#${stage} .team-card.selected`));
 
-      for (let i = 0; i < teams.length; i += 2) {
-        const matchId = matchNums[Math.floor(i / 2)];
-        const matchup = document.createElement('div');
-        matchup.classList.add('matchup');
-        matchup.setAttribute('data-match', matchId);
-
-        const team1 = document.createElement('div');
-        team1.className = 'team-card';
-        team1.textContent = teams[i];
-        team1.onclick = () => selectWinner(team1, matchId);
-
-        const team2 = document.createElement('div');
-        team2.className = 'team-card';
-        team2.textContent = teams[i + 1];
-        team2.onclick = () => selectWinner(team2, matchId);
-
-        matchup.appendChild(team1);
-        matchup.appendChild(team2);
-        round.appendChild(matchup);
-      }
+    if (selected.length === document.querySelectorAll(`#${stage} .matchup`).length) {
+      populateNextStage(selected, nextStage);
     }
-  </script>
+  }
+
+  function populateNextStage(selectedCards, stage) {
+    const next = document.getElementById(stage);
+    next.innerHTML = `<div class="round-title">${stage.charAt(0).toUpperCase() + stage.slice(1)}</div>`;
+
+    for (let i = 0; i < selectedCards.length; i += 2) {
+      const matchupDiv = document.createElement('div');
+      matchupDiv.className = 'matchup';
+
+      [0,1].forEach(j => {
+        const teamCard = document.createElement('div');
+        teamCard.className = 'team-card';
+        teamCard.innerText = selectedCards[i+j].innerText;
+        const nextStage = bracketStages[bracketStages.indexOf(stage)+1];
+        teamCard.onclick = () => selectWinner(teamCard, Math.floor(i/2), nextStage);
+        matchupDiv.appendChild(teamCard);
+      });
+
+      next.appendChild(matchupDiv);
+    }
+
+    if (stage === 'champion') {
+      updateChampion();
+    }
+  }
+
+  function updateChampion() {
+    const champBox = document.getElementById('champion');
+    const selected = document.querySelector('#championship .team-card.selected');
+    if (selected) {
+      champBox.innerHTML = `<div class="round-title">Champion</div><div class="team-card">${selected.innerText}</div>`;
+    }
+  }
+</script>
+
 </body>
 </html>
+
 
