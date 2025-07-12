@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IFL Playoff Bracket Prototype with SVG Connectors</title>
+<title>IFL Playoff Bracket with Logos</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
 
   body {
     margin: 0;
-    background: #f0f4f8;
+    background: #0c3d91; /* Dark blue background */
     font-family: 'Arial', sans-serif;
-    color: #222;
+    color: #fff;
     display: flex;
     justify-content: center;
     padding: 20px 10px;
@@ -34,7 +34,7 @@
   .header h1 {
     font-family: 'Anton', sans-serif;
     font-size: 2.2rem;
-    color: #0c3d91;
+    color: #ffffff;
     margin: 0;
   }
 
@@ -48,50 +48,74 @@
     grid-column: span 1;
     font-weight: 700;
     font-size: 1rem;
-    color: #0c3d91;
+    color: #a8c1f0;
     text-align: center;
     margin-bottom: 16px;
-  }
-
-  .team {
-    background: #ddd;
-    color: white;
-    font-weight: 700;
-    font-size: 0.9rem;
-    border-radius: 8px;
-    padding: 10px 8px;
-    text-align: center;
     user-select: none;
-    position: relative;
-    z-index: 2;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
-  .blue { background: #0c3d91; }
-  .red { background: #d93025; }
-  .green { background: #188038; }
-  .orange { background: #ea8600; }
-  .purple { background: #6a1b9a; }
-  .cyan { background: #009688; }
-  .brown { background: #5d4037; }
-  .grey { background: #757575; }
 
   .matchup {
-    border: 2px solid #0c3d91;
+    border: 2px solid #4a7be0;
     border-radius: 12px;
-    padding: 10px 8px;
+    padding: 12px 8px 8px;
+    background: #142e75; /* Slightly lighter blue */
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    background: white;
+    gap: 12px;
     position: relative;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.7);
   }
   .match-label {
     font-weight: 700;
     font-size: 0.9rem;
-    color: #0c3d91;
+    color: #c3d1f5;
     text-align: center;
     margin-bottom: 6px;
     user-select: none;
+  }
+
+  .team-card {
+    position: relative;
+    width: 140px;
+    height: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: default;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+    margin: 0 auto;
+    background: #0c3d91;
+  }
+  .team-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.7));
+  }
+  .team-name-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+    padding: 3px 0;
+  }
+
+  .champion {
+    grid-column: 7;
+    grid-row: 7;
+    background: #4a7be0;
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 900;
+    text-align: center;
+    border-radius: 12px;
+    padding: 14px 10px;
+    user-select: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
   }
 
   /* Grid placement for matchups */
@@ -102,19 +126,6 @@
   .semi1 { grid-column: 3; grid-row: 2 / span 4; }
   .semi2 { grid-column: 3; grid-row: 8 / span 4; }
   .final { grid-column: 5; grid-row: 5 / span 4; }
-  .champion {
-    grid-column: 7;
-    grid-row: 7;
-    background: #0c3d91;
-    color: white;
-    font-size: 1.4rem;
-    font-weight: 900;
-    text-align: center;
-    border-radius: 12px;
-    padding: 14px 10px;
-    user-select: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  }
 
   /* Responsive */
   @media (max-width: 420px) {
@@ -122,9 +133,9 @@
       max-width: 100%;
       padding: 0 12px;
     }
-    .team {
-      font-size: 0.85rem;
-      padding: 8px 6px;
+    .team-card {
+      width: 120px;
+      height: 36px;
     }
     .header h1 {
       font-size: 1.8rem;
@@ -147,14 +158,14 @@
 </style>
 </head>
 <body>
-  <main class="bracket-container" role="main" aria-label="IFL Playoff Bracket">
+  <main class="bracket-container" role="main" aria-label="IFL Playoff Bracket with Logos">
     <header class="header">
       <h1>World Bowl</h1>
       <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752185315/WBIII_id02n2.png" alt="World Bowl Logo" />
     </header>
 
     <section class="bracket" aria-describedby="bracket-description" id="bracket">
-      <p id="bracket-description" hidden>Bracket showing quarterfinals, semifinals, final, and champion</p>
+      <p id="bracket-description" hidden>Bracket showing quarterfinals, semifinals, final, and champion with team logos</p>
 
       <!-- Round labels -->
       <div class="round-label" style="grid-column:1; grid-row:1;">Quarterfinals</div>
@@ -165,71 +176,106 @@
       <!-- Quarterfinal matchups -->
       <div class="matchup quarter1" id="q1">
         <div class="match-label">Match 1</div>
-        <div class="team blue">Blue Warriors</div>
-        <div class="team red">Red Lions</div>
+        <div class="team-card" title="Australia Whites">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182184/australia-whites_h9o2vz.png" alt="Australia Whites Logo" />
+          <div class="team-name-overlay">Australia Whites</div>
+        </div>
+        <div class="team-card" title="Italia Bulls">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/italia-bulls_aocvis.png" alt="Italia Bulls Logo" />
+          <div class="team-name-overlay">Italia Bulls</div>
+        </div>
       </div>
       <div class="matchup quarter2" id="q2">
         <div class="match-label">Match 2</div>
-        <div class="team green">Green Giants</div>
-        <div class="team orange">Orange Eagles</div>
+        <div class="team-card" title="Belarus Barbarians">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/belarus-barbarians_ydx3kz.png" alt="Belarus Barbarians Logo" />
+          <div class="team-name-overlay">Belarus Barbarians</div>
+        </div>
+        <div class="team-card" title="Singapore Smelters">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/singapore-smelters_qn3ges.png" alt="Singapore Smelters Logo" />
+          <div class="team-name-overlay">Singapore Smelters</div>
+        </div>
       </div>
       <div class="matchup quarter3" id="q3">
         <div class="match-label">Match 3</div>
-        <div class="team purple">Purple Panthers</div>
-        <div class="team cyan">Cyan Sharks</div>
+        <div class="team-card" title="South Korea Deers">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/southkorea-deers_jbt02f.png" alt="South Korea Deers Logo" />
+          <div class="team-name-overlay">South Korea Deers</div>
+        </div>
+        <div class="team-card" title="Poland Panthers">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/poland-panthers_ppg3zr.png" alt="Poland Panthers Logo" />
+          <div class="team-name-overlay">Poland Panthers</div>
+        </div>
       </div>
       <div class="matchup quarter4" id="q4">
         <div class="match-label">Match 4</div>
-        <div class="team brown">Brown Bears</div>
-        <div class="team grey">Grey Wolves</div>
+        <div class="team-card" title="Germany Cavaliers">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/germany-cavaliers_qrcojc.png" alt="Germany Cavaliers Logo" />
+          <div class="team-name-overlay">Germany Cavaliers</div>
+        </div>
+        <div class="team-card" title="UK 3 Lions">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/uk-tri-lions_kyixfr.png" alt="UK 3 Lions Logo" />
+          <div class="team-name-overlay">UK 3 Lions</div>
+        </div>
       </div>
 
       <!-- Semifinal matchups -->
       <div class="matchup semi1" id="s1">
         <div class="match-label">Match 5</div>
-        <div class="team blue">Blue Warriors</div>
-        <div class="team green">Green Giants</div>
+        <div class="team-card" title="Australia Whites">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182184/australia-whites_h9o2vz.png" alt="Australia Whites Logo" />
+          <div class="team-name-overlay">Australia Whites</div>
+        </div>
+        <div class="team-card" title="Belarus Barbarians">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/belarus-barbarians_ydx3kz.png" alt="Belarus Barbarians Logo" />
+          <div class="team-name-overlay">Belarus Barbarians</div>
+        </div>
       </div>
       <div class="matchup semi2" id="s2">
         <div class="match-label">Match 6</div>
-        <div class="team purple">Purple Panthers</div>
-        <div class="team brown">Brown Bears</div>
+        <div class="team-card" title="South Korea Deers">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182186/southkorea-deers_jbt02f.png" alt="South Korea Deers Logo" />
+          <div class="team-name-overlay">South Korea Deers</div>
+        </div>
+        <div class="team-card" title="Germany Cavaliers">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/germany-cavaliers_qrcojc.png" alt="Germany Cavaliers Logo" />
+          <div class="team-name-overlay">Germany Cavaliers</div>
+        </div>
       </div>
 
       <!-- Final matchup -->
       <div class="matchup final" id="f1">
         <div class="match-label">Match 7</div>
-        <div class="team blue">Blue Warriors</div>
-        <div class="team brown">Brown Bears</div>
+        <div class="team-card" title="Australia Whites">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182184/australia-whites_h9o2vz.png" alt="Australia Whites Logo" />
+          <div class="team-name-overlay">Australia Whites</div>
+        </div>
+        <div class="team-card" title="Germany Cavaliers">
+          <img src="https://res.cloudinary.com/de4q4iitx/image/upload/v1752182185/germany-cavaliers_qrcojc.png" alt="Germany Cavaliers Logo" />
+          <div class="team-name-overlay">Germany Cavaliers</div>
+        </div>
       </div>
 
       <!-- Champion -->
-      <div class="champion" aria-label="Champion" id="champion">Blue Warriors</div>
+      <div class="champion" aria-label="Champion" id="champion">
+        Australia Whites
+      </div>
 
       <!-- SVG Connector -->
       <svg class="connectors" aria-hidden="true" preserveAspectRatio="none">
-        <path id="line-q1-s1" stroke="#0c3d91" stroke-width="3" fill="none" />
-        <path id="line-q2-s1" stroke="#0c3d91" stroke-width="3" fill="none" />
-        <path id="line-q3-s2" stroke="#0c3d91" stroke-width="3" fill="none" />
-        <path id="line-q4-s2" stroke="#0c3d91" stroke-width="3" fill="none" />
-        <path id="line-s1-f" stroke="#0c3d91" stroke-width="3" fill="none" />
-        <path id="line-s2-f" stroke="#0c3d91" stroke-width="3" fill="none" />
-        <path id="line-f-c" stroke="#0c3d91" stroke-width="3" fill="none" />
+        <path id="line-q1-s1" stroke="#4a7be0" stroke-width="3" fill="none" />
+        <path id="line-q2-s1" stroke="#4a7be0" stroke-width="3" fill="none" />
+        <path id="line-q3-s2" stroke="#4a7be0" stroke-width="3" fill="none" />
+        <path id="line-q4-s2" stroke="#4a7be0" stroke-width="3" fill="none" />
+        <path id="line-s1-f" stroke="#4a7be0" stroke-width="3" fill="none" />
+        <path id="line-s2-f" stroke="#4a7be0" stroke-width="3" fill="none" />
+        <path id="line-f-c" stroke="#4a7be0" stroke-width="3" fill="none" />
       </svg>
     </section>
   </main>
 
   <script>
-    function getCenterPosition(el) {
-      const rect = el.getBoundingClientRect();
-      return {
-        x: rect.left + rect.width / 2 + window.scrollX,
-        y: rect.top + rect.height / 2 + window.scrollY
-      };
-    }
-
     function setPath(pathEl, start, mid1, mid2, end) {
-      // Use a cubic Bezier curve to draw a smooth bracket style connector
       pathEl.setAttribute('d',
         `M${start.x},${start.y} 
          C${mid1.x},${mid1.y} ${mid2.x},${mid2.y} ${end.x},${end.y}`
@@ -246,19 +292,19 @@
       const fromRect = from.getBoundingClientRect();
       const toRect = to.getBoundingClientRect();
 
-      // Calculate start point (right middle of from box)
+      // start point: right middle of from box
       const start = {
         x: fromRect.right + window.scrollX,
         y: fromRect.top + fromRect.height / 2 + window.scrollY
       };
 
-      // Calculate end point (left middle of to box)
+      // end point: left middle of to box
       const end = {
         x: toRect.left + window.scrollX,
         y: toRect.top + toRect.height / 2 + window.scrollY
       };
 
-      // Calculate control points for smooth curve
+      // control points for smooth curve
       const offsetX = (end.x - start.x) / 2;
 
       const mid1 = { x: start.x + offsetX, y: start.y };
@@ -277,13 +323,8 @@
       updateConnector('f1', 'champion', 'line-f-c');
     }
 
-    window.addEventListener('load', () => {
-      updateAllConnectors();
-    });
-    window.addEventListener('resize', () => {
-      updateAllConnectors();
-    });
+    window.addEventListener('load', updateAllConnectors);
+    window.addEventListener('resize', updateAllConnectors);
   </script>
 </body>
 </html>
-
