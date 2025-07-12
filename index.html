@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IFL Bracket Prototype</title>
+<title>IFL Playoff Bracket Prototype</title>
 <style>
   body {
     margin: 0; 
@@ -13,7 +13,6 @@
     display: flex;
     justify-content: center;
     padding: 20px;
-    overflow-x: hidden;
   }
   .bracket-container {
     overflow-x: auto;
@@ -21,12 +20,10 @@
   }
   .bracket {
     display: flex;
-    gap: 140px;
+    gap: 120px;
     align-items: flex-start;
-    min-width: 1200px;
-    padding-bottom: 60px;
-    padding-left: 20px;
-    padding-right: 20px;
+    min-width: 1000px;
+    padding-bottom: 40px;
   }
   .round {
     display: flex;
@@ -37,26 +34,24 @@
   }
   .round-title {
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     margin-bottom: 20px;
     user-select: none;
   }
   .matchup {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     align-items: center;
     width: 180px;
   }
   .match-label {
-    font-size: 0.9rem;
-    margin-bottom: 6px;
-    text-align: center;
+    font-size: 1rem;
     user-select: none;
   }
   .teams {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     justify-content: center;
   }
   .team {
@@ -71,23 +66,22 @@
     user-select: none;
     font-weight: 600;
     color: white;
-    box-shadow: 0 0 5px rgba(0,0,0,0.7);
-    transition: box-shadow 0.25s ease, transform 0.15s ease;
     border: 2px solid transparent;
+    transition: border-color 0.3s ease, transform 0.2s ease;
   }
   .team.selected {
     border-color: #0a84ff;
-    box-shadow: 0 0 14px #0a84ff;
     transform: scale(1.05);
+    box-shadow: 0 0 10px #0a84ff;
     z-index: 10;
   }
   .team.disabled {
-    opacity: 0.3;
+    opacity: 0.4;
     cursor: default;
   }
   .champion {
     margin-top: 15px;
-    padding: 15px 30px;
+    padding: 15px 25px;
     background: #0a84ff;
     border-radius: 8px;
     font-weight: bold;
@@ -105,6 +99,7 @@
 
     <div class="round" id="divisional">
       <div class="round-title">Divisional</div>
+      <!-- 4 Matchups -->
       <div class="matchup" data-match="1">
         <div class="match-label">Match 1</div>
         <div class="teams">
@@ -137,6 +132,7 @@
 
     <div class="round" id="conference">
       <div class="round-title">Conference</div>
+      <!-- 2 Matchups -->
       <div class="matchup" data-match="1">
         <div class="match-label">Match 1</div>
         <div class="teams">
@@ -155,6 +151,7 @@
 
     <div class="round" id="championship">
       <div class="round-title">Championship</div>
+      <!-- 1 Matchup -->
       <div class="matchup" data-match="1">
         <div class="match-label">Match 1</div>
         <div class="teams">
@@ -166,14 +163,14 @@
 
     <div class="round" id="champion-round">
       <div class="round-title">Champion</div>
-      <div class="champion" id="champion">No Champion Yet</div>
+      <div class="champion" id="champion">No Champion Selected</div>
     </div>
 
   </div>
 </div>
 
 <script>
-  // Data model: rounds and matches
+  // Data structure for the bracket
   const bracket = {
     divisional: {
       1: ['1', '2'],
@@ -191,7 +188,7 @@
     champion: ''
   };
 
-  // Update the teams shown in a matchup in a round
+  // Function to update matchup UI
   function updateMatchup(round, match, teams) {
     const matchup = document.querySelector(`#${round} .matchup[data-match="${match}"] .teams`);
     if (!matchup) return;
@@ -210,7 +207,7 @@
     }
   }
 
-  // Clear downstream rounds after a deselection
+  // Clear downstream rounds
   function clearDownstream(round, match) {
     if (round === 'divisional') {
       const nextMatch = Math.ceil(match / 2);
@@ -231,18 +228,18 @@
     }
   }
 
-  // Update champion display text
+  // Update champion text
   function updateChampion(team) {
     const champDiv = document.getElementById('champion');
     bracket.champion = team;
     if (team) {
       champDiv.textContent = `Champion: Team ${team}`;
     } else {
-      champDiv.textContent = 'No Champion Yet';
+      champDiv.textContent = 'No Champion Selected';
     }
   }
 
-  // Handle team card clicks for selection/deselection
+  // Click handler for team selection/deselection
   function handleTeamClick(e) {
     const el = e.currentTarget;
     if (el.classList.contains('disabled')) return;
@@ -253,7 +250,7 @@
     const isSelected = el.classList.contains('selected');
 
     if (isSelected) {
-      // Deselect team and clear downstream
+      // Deselect and clear downstream
       el.classList.remove('selected');
       clearDownstream(round, match);
 
@@ -298,19 +295,19 @@
     }
   }
 
-  // Initialize all event listeners and UI
+  // Initialize
   function init() {
-    // Set initial Divisional matchups
+    // Load Divisional teams
     for (let match = 1; match <= 4; match++) {
       updateMatchup('divisional', match, bracket.divisional[match]);
     }
-    // Set empty next rounds
+    // Load empty next rounds
     updateMatchup('conference', 1, bracket.conference[1]);
     updateMatchup('conference', 2, bracket.conference[2]);
     updateMatchup('championship', 1, bracket.championship[1]);
     updateChampion(bracket.champion);
 
-    // Add click handlers
+    // Attach event listeners
     document.querySelectorAll('.team').forEach(teamDiv => {
       teamDiv.addEventListener('click', handleTeamClick);
     });
