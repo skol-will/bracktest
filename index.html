@@ -170,7 +170,7 @@
 </div>
 
 <script>
-  // Data structure for the bracket
+  <script>
   const bracket = {
     divisional: {
       1: ['1', '2'],
@@ -188,7 +188,6 @@
     champion: ''
   };
 
-  // Function to update matchup UI
   function updateMatchup(round, match, teams) {
     const matchup = document.querySelector(`#${round} .matchup[data-match="${match}"] .teams`);
     if (!matchup) return;
@@ -203,11 +202,11 @@
         teamDiv.dataset.team = '';
         teamDiv.classList.add('disabled');
       }
+      // Remove selection from updated teams
       teamDiv.classList.remove('selected');
     }
   }
 
-  // Clear downstream rounds
   function clearDownstream(round, match) {
     if (round === 'divisional') {
       const nextMatch = Math.ceil(match / 2);
@@ -228,7 +227,6 @@
     }
   }
 
-  // Update champion text
   function updateChampion(team) {
     const champDiv = document.getElementById('champion');
     bracket.champion = team;
@@ -239,7 +237,6 @@
     }
   }
 
-  // Click handler for team selection/deselection
   function handleTeamClick(e) {
     const el = e.currentTarget;
     if (el.classList.contains('disabled')) return;
@@ -250,7 +247,6 @@
     const isSelected = el.classList.contains('selected');
 
     if (isSelected) {
-      // Deselect and clear downstream
       el.classList.remove('selected');
       clearDownstream(round, match);
 
@@ -273,7 +269,7 @@
         }
       }
     } else {
-      // Select team, deselect siblings, update next round
+      // Select team, deselect siblings
       const siblings = el.parentElement.querySelectorAll('.team');
       siblings.forEach(sib => sib.classList.remove('selected'));
       el.classList.add('selected');
@@ -285,7 +281,7 @@
         updateMatchup('conference', nextMatch, bracket.conference[nextMatch]);
         clearDownstream('divisional', match);
       } else if (round === 'conference') {
-        const slot = match === 1 ? 0 : 1;
+        const slot = (match === 1) ? 0 : 1;
         bracket.championship[1][slot] = team;
         updateMatchup('championship', 1, bracket.championship[1]);
         clearDownstream('conference', match);
@@ -295,19 +291,15 @@
     }
   }
 
-  // Initialize
   function init() {
-    // Load Divisional teams
     for (let match = 1; match <= 4; match++) {
       updateMatchup('divisional', match, bracket.divisional[match]);
     }
-    // Load empty next rounds
     updateMatchup('conference', 1, bracket.conference[1]);
     updateMatchup('conference', 2, bracket.conference[2]);
     updateMatchup('championship', 1, bracket.championship[1]);
     updateChampion(bracket.champion);
 
-    // Attach event listeners
     document.querySelectorAll('.team').forEach(teamDiv => {
       teamDiv.addEventListener('click', handleTeamClick);
     });
